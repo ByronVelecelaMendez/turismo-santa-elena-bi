@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Datos crudos del proyecto
+data/raw/
+data/staging/
+
+# Archivos de sistema Windows
+Thumbs.db
+desktop.ini
