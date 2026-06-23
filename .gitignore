@@ -220,6 +220,7 @@ __marimo__/
 # Datos crudos del proyecto
 data/raw/
 data/staging/
+data/csv/
 
 # Archivos de sistema Windows
 Thumbs.db
