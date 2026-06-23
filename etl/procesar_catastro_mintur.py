@@ -1,0 +1,101 @@
+import json
+import os
+import pandas as pd
+from datetime import datetime
+
+ARCHIVOS = {
+    "2023-10": "data/csv/1era-quincena-octubre-catastro-nacional-2023-banecuador-sri.xlsx",
+    "2025-02": "data/csv/1era-quincena-febrero-catastro-nacional-2025-banecuador.xlsx",
+}
+
+# Solo tus 6 destinos oficiales del proyecto (DIM_DESTINO)
+DESTINOS_PARROQUIA = {
+    "SALINAS": "salinas",
+    "GENERAL ALBERTO ENRÍQUEZ GALLO": "salinas",
+    "JOSÉ LUIS TAMAYO": "salinas",
+    "ANCONCITO": "salinas",
+    "LA LIBERTAD": "la_libertad",
+    "MANGLARALTO": "manglaralto",  # incluye Montañita y Ayangue, ver nota abajo
+}
+
+
+def limpiar(valor):
+    """Convierte cualquier NaN/NaT de pandas a None real de Python."""
+    if pd.isna(valor):
+        return None
+    return valor
+
+
+def procesar_catastro(periodo, ruta):
+    df = pd.read_excel(ruta)
+
+    df["Provincia"] = df["Provincia"].astype(str).str.strip().str.upper()
+    df["Cantón"] = df["Cantón"].astype(str).str.strip().str.upper()
+    df["Parroquia"] = df["Parroquia"].astype(str).str.strip().str.upper().str.replace(r"\s+", " ", regex=True)
+
+    santa_elena = df[df["Provincia"] == "SANTA ELENA"].copy()
+    alojamiento = santa_elena[santa_elena["Actividad / Modalidad"] == "ALOJAMIENTO"].copy()
+
+    # Filtrar solo parroquias que mapean a tus 6 destinos oficiales
+    alojamiento = alojamiento[alojamiento["Parroquia"].isin(DESTINOS_PARROQUIA.keys())].copy()
+
+    registros = []
+    for _, fila in alojamiento.iterrows():
+        parroquia = fila["Parroquia"]
+        destino_aprox = DESTINOS_PARROQUIA.get(parroquia, "sin_mapear")
+
+        registros.append({
+            "fuente": "mintur_catastro",
+            "periodo": periodo,
+            "ruc": limpiar(fila["RUC"]),
+            "nombre_establecimiento": limpiar(fila["Nombre Comercial"]),
+            "fecha_registro": str(fila["Fecha de Registro"]) if pd.notna(fila["Fecha de Registro"]) else None,
+            "clasificacion": limpiar(fila["Clasificación"]),
+            "categoria": limpiar(fila["Categoría"]),
+            "canton": limpiar(fila["Cantón"]),
+            "parroquia": parroquia,
+            "destino_aproximado": destino_aprox,
+            "direccion": limpiar(fila["Dirección"]),
+            "telefono": limpiar(fila["Teléfono Principal"]),
+            "estado_registro": limpiar(fila["Estado Registro del Establecimiento"]),
+            "fecha_extraccion": datetime.now().isoformat(),
+        })
+
+    return registros
+
+
+def main():
+    os.makedirs("data/raw", exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    resumen = {}
+
+    for periodo, ruta in ARCHIVOS.items():
+        if not os.path.exists(ruta):
+            print(f"[AVISO] No encontré el archivo: {ruta}")
+            continue
+
+        print(f"\nProcesando catastro {periodo}...")
+        registros = procesar_catastro(periodo, ruta)
+
+        print(f"  -> {len(registros)} establecimientos en los 6 destinos oficiales")
+
+        archivo_salida = f"data/raw/mintur_catastro_{periodo}_{timestamp}.json"
+        with open(archivo_salida, "w", encoding="utf-8") as f:
+            json.dump(registros, f, ensure_ascii=False, indent=2, default=str)
+
+        print(f"  -> Guardado: {archivo_salida}")
+        resumen[periodo] = len(registros)
+
+    print("\n=== Resumen comparativo ===")
+    for periodo, total in resumen.items():
+        print(f"{periodo}: {total} alojamientos registrados")
+
+    if len(resumen) == 2:
+        periodos = sorted(resumen.keys())
+        crecimiento = ((resumen[periodos[1]] - resumen[periodos[0]]) / resumen[periodos[0]]) * 100
+        print(f"\nCrecimiento {periodos[0]} -> {periodos[1]}: {crecimiento:.1f}%")
+
+
+if __name__ == "__main__":
+    main()
