@@ -9,11 +9,18 @@ import unicodedata
 MAPA_DESTINOS = {
     "montanita": "montanita",
     "montañita": "montanita",
+
     "salinas": "salinas",
+
     "ayangue": "ayangue",
-    "punta carnero": "punta_carnero",
+
     "manglaralto": "manglaralto",
+
     "la libertad": "la_libertad",
+    "la_libertad": "la_libertad",
+
+    "punta carnero": "punta_carnero",
+    "punta_carnero": "punta_carnero",
 }
 
 DESTINOS_OFICIALES = {
@@ -29,29 +36,27 @@ def quitar_acentos(texto: str) -> str:
 
 
 def homologar_destino(destino_raw: str) -> dict:
-    """
-    Recibe cualquier variante de texto de destino (ej. 'Ayangue Ecuador',
-    'MANGLARALTO', 'Montañita') y devuelve el slug oficial homologado.
-
-    Retorna un dict con:
-        - destino_slug: el nombre oficial homologado, o 'sin_clasificar'
-        - dentro_alcance: True/False si es uno de los 6 destinos del proyecto
-    """
     if not destino_raw:
         return {"destino_slug": "sin_clasificar", "dentro_alcance": False}
 
     texto = quitar_acentos(str(destino_raw)).lower().strip()
+    texto = texto.replace("_", " ")
     texto = texto.replace("ecuador", "").replace(",", " ").strip()
     texto = re.sub(r"\s+", " ", texto)
 
     if texto in MAPA_DESTINOS:
         slug = MAPA_DESTINOS[texto]
-        return {"destino_slug": slug, "dentro_alcance": slug in DESTINOS_OFICIALES}
+        return {
+            "destino_slug": slug,
+            "dentro_alcance": slug in DESTINOS_OFICIALES
+        }
 
-    # Búsqueda parcial: por si viene con texto adicional, ej. "playa de ayangue"
     for variante, slug in MAPA_DESTINOS.items():
         if variante in texto:
-            return {"destino_slug": slug, "dentro_alcance": slug in DESTINOS_OFICIALES}
+            return {
+                "destino_slug": slug,
+                "dentro_alcance": slug in DESTINOS_OFICIALES
+            }
 
     return {"destino_slug": "sin_clasificar", "dentro_alcance": False}
 
