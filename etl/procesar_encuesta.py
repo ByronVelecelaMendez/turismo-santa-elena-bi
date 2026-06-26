@@ -1,93 +1,56 @@
-import json
 import os
-import re
+import json
 import pandas as pd
 from datetime import datetime
 
-ARCHIVO_ENCUESTA = "data/csv/Experiencia_Turística_en_la_Provincia_de_Santa_Elena.csv"
+def homologar_destino(texto):
+    """Asegura que los destinos de la encuesta coincidan exactamente con tus hoteles."""
+    if not texto: 
+        return "sin_clasificar"
+    t = str(texto).strip().lower()
+    if "salinas" in t: return "salinas"
+    if "monta" in t or "montañita" in t: return "montanita"
+    if "ayangue" in t: return "ayangue"
+    if "libertad" in t: return "la_libertad"
+    if "manglar" in t: return "manglaralto"
+    if "carnero" in t: return "punta_carnero"
+    return "sin_clasificar"
 
-DESTINOS_VALIDOS = {
-    "Salinas": "salinas",
-    "La Libertad": "la_libertad",
-    "Ayangue": "ayangue",
-    "Montañita": "montanita",
-    "Punta Carnero": "punta_carnero",
-    "Manglaralto": "manglaralto",
-}
+def procesar_encuesta_staging():
+    ruta_csv = "data/csv/Experiencia_Turística_en_la_Provincia_de_Santa_Elena.csv"
+    ruta_output = "data/staging"
+    
+    if not os.path.exists(ruta_csv):
+        print(f"[-] Error: No se encontró el CSV en: {ruta_csv}")
+        return
 
-DESTINOS_FUERA_ALCANCE = {
-    "Olón": "olon",
-}
+    print(f"[*] Leyendo y limpiando la encuesta: {ruta_csv}")
+    
+    # Leer el CSV original
+    df = pd.read_csv(ruta_csv, encoding="utf-8")
+    
+    # Buscamos la columna donde el turista puso qué lugar visitó
+    columna_destino = [col for col in df.columns if 'destino' in col.lower() or 'lugar' in col.lower()]
+    
+    if columna_destino:
+        col_dest = columna_destino[0]
+        # Creamos una columna limpia con destinos homologados
+        df['destino_homologado'] = df[col_dest].apply(homologar_destino)
+    else:
+        df['destino_homologado'] = "sin_clasificar"
 
-RANGOS_PRECIO = {
-    "Menos de $30": 15,
-    "$30 a $60": 45,
-    "$61 a $100": 80,
-    "Más de $100": 120,
-}
-
-
-def extraer_rating_numerico(texto):
-    if pd.isna(texto):
-        return None
-    match = re.match(r"^\s*(\d+)", str(texto))
-    return int(match.group(1)) if match else None
-
-
-def main():
-    df = pd.read_csv(ARCHIVO_ENCUESTA)
-
-    registros = []
-    descartados_fuera_alcance = 0
-
-    for _, fila in df.iterrows():
-        destino_raw = str(fila["¿Qué destino de Santa Elena visitó más recientemente?"]).strip()
-
-        if destino_raw in DESTINOS_FUERA_ALCANCE:
-            descartados_fuera_alcance += 1
-            destino_normalizado = DESTINOS_FUERA_ALCANCE[destino_raw]
-            dentro_alcance = False
-        elif destino_raw in DESTINOS_VALIDOS:
-            destino_normalizado = DESTINOS_VALIDOS[destino_raw]
-            dentro_alcance = True
-        else:
-            destino_normalizado = "sin_clasificar"
-            dentro_alcance = False
-
-        registros.append({
-            "fuente": "encuesta_propia",
-            "marca_temporal": str(fila["Marca temporal"]),
-            "origen_visitante": fila["¿De qué provincia o país viene?"],
-            "destino_visitado_raw": destino_raw,
-            "destino_normalizado": destino_normalizado,
-            "dentro_alcance_proyecto": dentro_alcance,
-            "temporada_preferida": fila["¿En qué temporada prefiere visitar Santa Elena?"],
-            "tipo_alojamiento_preferido": fila["¿Qué tipo de alojamiento prefiere?"],
-            "rango_precio_noche": fila["¿Cuánto paga por noche de hospedaje en Santa Elena?"],
-            "precio_noche_estimado_usd": RANGOS_PRECIO.get(fila["¿Cuánto paga por noche de hospedaje en Santa Elena?"]),
-            "plataforma_reserva": fila["¿A través de qué plataforma reserva su hospedaje?"],
-            "rating_precio_calidad": extraer_rating_numerico(fila["¿Cómo califica la relación precio-calidad del hospedaje? (1 al 5)"]),
-            "rating_atencion_turista": extraer_rating_numerico(fila["¿Cómo califica la atención al turista en la provincia? (1 al 5)"]),
-            "aspecto_a_mejorar": fila["¿Qué aspecto necesita mejorar más el turismo en Santa Elena?"],
-            "recomendaria": fila["¿Recomendaría visitar Santa Elena a otras personas?"],
-            "fecha_extraccion": datetime.now().isoformat(),
-        })
-
-    os.makedirs("data/raw", exist_ok=True)
+    # Convertir a formato JSON de staging
+    registros_limpios = df.to_dict(orient="records")
+    
+    # Guardar en data/staging con la fecha de hoy
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    archivo_salida = f"data/raw/encuesta_propia_{timestamp}.json"
-
-    with open(archivo_salida, "w", encoding="utf-8") as f:
-        json.dump(registros, f, ensure_ascii=False, indent=2)
-
-    print(f"Total respuestas procesadas: {len(registros)}")
-    print(f"Respuestas fuera de los 6 destinos oficiales (ej. Olón): {descartados_fuera_alcance}")
-    print(f"Guardado: {archivo_salida}")
-
-    print("\n=== Resumen rápido ===")
-    print("Rating promedio precio-calidad:", round(pd.Series([r["rating_precio_calidad"] for r in registros]).mean(), 2))
-    print("Rating promedio atención al turista:", round(pd.Series([r["rating_atencion_turista"] for r in registros]).mean(), 2))
-
+    ruta_final = os.path.join(ruta_output, f"staging_encuesta_{timestamp}.json")
+    
+    with open(ruta_final, "w", encoding="utf-8") as f:
+        json.dump(registros_limpios, f, ensure_ascii=False, indent=4)
+        
+    print(f"[+] ÉXITO: Encuesta procesada y guardada en: {ruta_final}")
+    print(f"[*] Respuestas totales procesadas: {len(registros_limpios)}")
 
 if __name__ == "__main__":
-    main()
+    procesar_encuesta_staging()

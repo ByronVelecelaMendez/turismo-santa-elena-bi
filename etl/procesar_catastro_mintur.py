@@ -65,10 +65,13 @@ def procesar_catastro(periodo, ruta):
 
 
 def main():
+    # Aseguramos que existan las carpetas de salida
     os.makedirs("data/raw", exist_ok=True)
+    os.makedirs("data/staging", exist_ok=True)
+    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
     resumen = {}
+    todos_los_registros_staging = []  # Lista para unificar toda la data de MINTUR
 
     for periodo, ruta in ARCHIVOS.items():
         if not os.path.exists(ruta):
@@ -77,15 +80,25 @@ def main():
 
         print(f"\nProcesando catastro {periodo}...")
         registros = procesar_catastro(periodo, ruta)
-
         print(f"  -> {len(registros)} establecimientos en los 6 destinos oficiales")
 
-        archivo_salida = f"data/raw/mintur_catastro_{periodo}_{timestamp}.json"
-        with open(archivo_salida, "w", encoding="utf-8") as f:
+        # Guardamos el respaldo individual en raw
+        archivo_raw = f"data/raw/mintur_catastro_{periodo}_{timestamp}.json"
+        with open(archivo_raw, "w", encoding="utf-8") as f:
             json.dump(registros, f, ensure_ascii=False, indent=2, default=str)
-
-        print(f"  -> Guardado: {archivo_salida}")
+        print(f"  -> Respaldado en raw: {archivo_raw}")
+        
+        # Acumulamos para la capa de Staging
+        todos_los_registros_staging.extend(registros)
         resumen[periodo] = len(registros)
+
+    # === GUARDAR EL ARCHIVO UNIFICADO EN STAGING ===
+    if todos_los_registros_staging:
+        archivo_staging = f"data/staging/staging_mintur_{timestamp}.json"
+        with open(archivo_staging, "w", encoding="utf-8") as f:
+            json.dump(todos_los_registros_staging, f, ensure_ascii=False, indent=4, default=str)
+        print(f"\n[+] ÉXITO STAGING: Archivo unificado guardado en: {archivo_staging}")
+        print(f"[*] Total general de registros oficiales consolidados: {len(todos_los_registros_staging)}")
 
     print("\n=== Resumen comparativo ===")
     for periodo, total in resumen.items():
@@ -95,7 +108,6 @@ def main():
         periodos = sorted(resumen.keys())
         crecimiento = ((resumen[periodos[1]] - resumen[periodos[0]]) / resumen[periodos[0]]) * 100
         print(f"\nCrecimiento {periodos[0]} -> {periodos[1]}: {crecimiento:.1f}%")
-
 
 if __name__ == "__main__":
     main()
