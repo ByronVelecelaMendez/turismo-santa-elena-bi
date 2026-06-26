@@ -1,0 +1,252 @@
+[
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Libertad 109 Hotel",
+    "precio_raw": "US$99",
+    "rating_raw": "Puntuación: 9,5\n9,5\nExcepcional\n83 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.437031"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Hotel Punta del Mar, Salinas, La Libertad",
+    "precio_raw": "US$126",
+    "rating_raw": "Puntuación: 8,2\n8,2\nMuy bien\n11 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.468639"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Departamento con vista al mar, piscina, jacuzzi y área BBQ",
+    "precio_raw": "US$225",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.497503"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Suite de lujo Punta Centinela",
+    "precio_raw": "US$274",
+    "rating_raw": "Puntuación: 10\n10\nExcepcional\n1 comentario",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.536100"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Wake up facing the sea-Luxury and comfort-Pto Lucia",
+    "precio_raw": "US$616",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.572380"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Habitaciones de alquiler",
+    "precio_raw": "US$70",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.612086"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Wake up facing the sea-Luxury and comfort-Pto Lucia",
+    "precio_raw": "US$590",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.648564"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Salinas Libertad departamento frente al mar",
+    "precio_raw": "US$320",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.688217"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Cómo en casa",
+    "precio_raw": "US$392",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.719820"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Hotel Presidente Beach Salinas",
+    "precio_raw": "US$109",
+    "rating_raw": "Puntuación: 8,7\n8,7\nFabuloso\n675 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.772290"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Yesimar Hotel",
+    "precio_raw": "US$71",
+    "rating_raw": "Puntuación: 8,6\n8,6\nFabuloso\n88 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.922322"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Hotel Boutique Playa Canela Ecuador",
+    "precio_raw": "US$343",
+    "rating_raw": "Puntuación: 9,4\n9,4\nFantástico\n28 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:54.966768"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Acogedor departamento con playa privada",
+    "precio_raw": "US$223",
+    "rating_raw": "Puntuación: 8,9\n8,9\nFabuloso\n38 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.023986"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Departamento al pie del mar con hermosa vista / Torre Oceánica",
+    "precio_raw": "US$360",
+    "rating_raw": "Puntuación: 7,7\n7,7\nBien\n15 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.084858"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Ecuabook Salinas Resort Departament",
+    "precio_raw": "US$439",
+    "rating_raw": "Puntuación: 7,6\n7,6\nBien\n7 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.141959"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "BlackPoint",
+    "precio_raw": "US$80",
+    "rating_raw": "Puntuación: 7,8\n7,8\nBien\n98 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.206249"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Hotel Playa Dorada Salinas",
+    "precio_raw": "US$110",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.271248"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Hostal Sol Y Mar",
+    "precio_raw": "US$68",
+    "rating_raw": "Puntuación: 9,3\n9,3\nFantástico\n4 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.337458"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Casa Blue Tortuga",
+    "precio_raw": "US$72",
+    "rating_raw": "Puntuación: 9,4\n9,4\nFantástico\n73 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.402308"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Lindo Departamento al pie de playa Edificio TORRE OCEÁNICA",
+    "precio_raw": "US$275",
+    "rating_raw": "Puntuación: 9,6\n9,6\nExcepcional\n30 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.479231"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Depa en Salinas en condo privado a una calle del mar con parqueo",
+    "precio_raw": "US$160",
+    "rating_raw": "Puntuación: 10\n10\nExcepcional\n2 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.521804"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Puerto Lucía - Salinas Beach",
+    "precio_raw": "US$252",
+    "rating_raw": "Puntuación: 7,5\n7,5\nBien\n20 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.588787"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Posada Estrella",
+    "precio_raw": "US$65",
+    "rating_raw": "Puntuación: 9,2\n9,2\nFantástico\n86 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.664579"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Hostal Haziel",
+    "precio_raw": "US$40",
+    "rating_raw": "Puntuación: 8,7\n8,7\nFabuloso\n53 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.736796"
+  },
+  {
+    "fuente": "booking",
+    "destino": "La Libertad Ecuador",
+    "nombre": "Casa vacacional en Salinas en Urb privada con parqueo piscina y jacuzzi",
+    "precio_raw": "US$114",
+    "rating_raw": "Puntuación: 9,5\n9,5\nExcepcional\n4 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:55.796864"
+  }
+]

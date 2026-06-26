@@ -1,0 +1,252 @@
+[
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hotel Presidente Beach Salinas",
+    "precio_raw": "US$109",
+    "rating_raw": "Puntuación: 8,7\n8,7\nFabuloso\n675 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.503942"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Chescos Hotel",
+    "precio_raw": "US$78",
+    "rating_raw": "Puntuación: 7,8\n7,8\nBien\n858 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.545250"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hotel Villa Del Mar",
+    "precio_raw": "US$59",
+    "rating_raw": "Puntuación: 8,3\n8,3\nMuy bien\n464 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.587658"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Riveri Salinas BY CHAQANA",
+    "precio_raw": "US$39",
+    "rating_raw": "Puntuación: 8,4\n8,4\nMuy bien\n287 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.634152"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hotel Casablanca Salinas",
+    "precio_raw": "US$80",
+    "rating_raw": "Puntuación: 8,6\n8,6\nFabuloso\n647 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.683729"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Blue Bay Hotel",
+    "precio_raw": "US$150",
+    "rating_raw": "Puntuación: 8,4\n8,4\nMuy bien\n251 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.748452"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Yesimar Hotel",
+    "precio_raw": "US$71",
+    "rating_raw": "Puntuación: 8,6\n8,6\nFabuloso\n88 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.810547"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "C&E ALOJAMIENTOS APARTAMENTOS , A una calle de la Playa Y Malecón",
+    "precio_raw": "US$198",
+    "rating_raw": "Puntuación: 9,8\n9,8\nExcepcional\n49 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.868090"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Fogata Hostel",
+    "precio_raw": "US$72",
+    "rating_raw": "Puntuación: 8,9\n8,9\nFabuloso\n268 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:03.932927"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Elegant Chipipe Apartment Walk to the Beach",
+    "precio_raw": "US$224",
+    "rating_raw": "Puntuación: 9,7\n9,7\nExcepcional\n28 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.012898"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Departamento Completo Frente Al Mar San Lorenzo Salinas",
+    "precio_raw": "US$252",
+    "rating_raw": "Puntuación: 9,6\n9,6\nExcepcional\n70 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.090527"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Departamentos super cómodos en el corazón de Salinas",
+    "precio_raw": "US$86",
+    "rating_raw": "Puntuación: 9,0\n9,0\nFantástico\n9 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.148764"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hotel Casablanca CHIPIPE",
+    "precio_raw": "US$80",
+    "rating_raw": "Puntuación: 8,6\n8,6\nFabuloso\n403 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.217944"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Habitación privada en Salinas",
+    "precio_raw": "US$60",
+    "rating_raw": "Puntuación: 9,2\n9,2\nFantástico\n107 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.281161"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Habitacion Vacacional Camboriu",
+    "precio_raw": "US$39",
+    "rating_raw": "Puntuación: 7,6\n7,6\nBien\n81 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.347479"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hotel Boutique Playa Canela Ecuador",
+    "precio_raw": "US$343",
+    "rating_raw": "Puntuación: 9,4\n9,4\nFantástico\n28 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.412915"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hotel Colon Salinas",
+    "precio_raw": "US$278",
+    "rating_raw": "Puntuación: 7,5\n7,5\nBien\n281 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.476037"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hotel Marvento II",
+    "precio_raw": "US$90",
+    "rating_raw": "Puntuación: 7,3\n7,3\nBien\n95 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.523915"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Apartamento 304 en Salinas",
+    "precio_raw": "US$130",
+    "rating_raw": "Puntuación: 9,0\n9,0\nFantástico\n29 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.594722"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "KattyApartament1102",
+    "precio_raw": "US$342",
+    "rating_raw": "Puntuación: 7,7\n7,7\nBien\n10 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.646964"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Barceló Colon Miramar Salinas suite",
+    "precio_raw": "US$240",
+    "rating_raw": "Puntuación: 9,7\n9,7\nExcepcional\n24 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.719001"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Beachfront apartment in Salinas Malecom",
+    "precio_raw": "US$170",
+    "rating_raw": "Puntuación: 8,9\n8,9\nFabuloso\n27 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.801035"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hotel Ipanema Beach by Majestic",
+    "precio_raw": "US$63",
+    "rating_raw": "Puntuación: 9,4\n9,4\nFantástico\n45 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.876264"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Departamento Barceló Colon Miramar Salinas",
+    "precio_raw": "US$288",
+    "rating_raw": "Puntuación: 10\n10\nExcepcional\n3 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:04.949507"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Salinas Ecuador",
+    "nombre": "Hemingway Salinas Apartment",
+    "precio_raw": "US$238",
+    "rating_raw": "Puntuación: 9,6\n9,6\nExcepcional\n12 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:07:05.026911"
+  }
+]

@@ -1,0 +1,252 @@
+[
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Hotel Kundalini",
+    "precio_raw": "US$78",
+    "rating_raw": "Puntuación: 9,4\n9,4\nFantástico\n1.170 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:50.987810"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Hotel Sol y Playa Montañita",
+    "precio_raw": "US$55",
+    "rating_raw": "Puntuación: 8,0\n8,0\nMuy bien\n305 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.022318"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Casa del Sol",
+    "precio_raw": "US$70",
+    "rating_raw": "Puntuación: 9,3\n9,3\nFantástico\n320 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.056919"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Hotel Karukera",
+    "precio_raw": "US$63",
+    "rating_raw": "Puntuación: 7,9\n7,9\nBien\n95 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.087398"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "ME Hotel & Villas - Montañita Estates",
+    "precio_raw": "US$157",
+    "rating_raw": "Puntuación: 8,1\n8,1\nMuy bien\n194 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.117330"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Hostal Mamacocha",
+    "precio_raw": "US$29",
+    "rating_raw": "Puntuación: 7,5\n7,5\nBien\n171 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.148035"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "HiDDEN HOUSE",
+    "precio_raw": "US$60",
+    "rating_raw": "Puntuación: 7,9\n7,9\nBien\n9 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.179216"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "La Gondola",
+    "precio_raw": "US$74",
+    "rating_raw": "Puntuación: 8,9\n8,9\nFabuloso\n173 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.208242"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Tiki Limbo",
+    "precio_raw": "US$86",
+    "rating_raw": "Puntuación: 8,1\n8,1\nMuy bien\n135 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.242790"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Hotel Sotavento",
+    "precio_raw": "US$100",
+    "rating_raw": "Puntuación: 8,7\n8,7\nFabuloso\n25 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.273534"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Hotel SoleMare",
+    "precio_raw": "US$56",
+    "rating_raw": "Puntuación: 9,2\n9,2\nFantástico\n120 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.302647"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Hostal Yaku Montañita",
+    "precio_raw": "US$20",
+    "rating_raw": "Puntuación: 8,8\n8,8\nFabuloso\n95 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.334299"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "HANGA ROA HOTEL",
+    "precio_raw": "US$105",
+    "rating_raw": "Puntuación: 8,4\n8,4\nMuy bien\n264 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.376301"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Kamala Surf & Backpacker Hostel",
+    "precio_raw": "US$60",
+    "rating_raw": "Puntuación: 8,7\n8,7\nFabuloso\n249 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.419670"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "UFO Rooms",
+    "precio_raw": "US$30",
+    "rating_raw": "Puntuación: 7,6\n7,6\nBien\n117 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.457590"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Dharma Beach",
+    "precio_raw": "US$180",
+    "rating_raw": "Puntuación: 8,7\n8,7\nFabuloso\n99 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.496697"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Hostal Rosa Mística",
+    "precio_raw": "US$110",
+    "rating_raw": "Puntuación: 6,7\n6,7\nPuntuación\n3 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.533671"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Paradise Project Hostal",
+    "precio_raw": "US$120",
+    "rating_raw": "Puntuación: 7,2\n7,2\nBien\n64 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.575754"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Casa Del Merman at GayMontanita House",
+    "precio_raw": "US$84",
+    "rating_raw": "Puntuación: 9,4\n9,4\nFantástico\n138 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.612603"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Armonía Lodge",
+    "precio_raw": "US$68",
+    "rating_raw": "Puntuación: 9,1\n9,1\nFantástico\n90 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.655119"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "The Heights in Montañita",
+    "precio_raw": "US$198",
+    "rating_raw": "Puntuación: 7,1\n7,1\nBien\n33 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.686396"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Esperanto Bed & Breakfast Surf Hostel",
+    "precio_raw": "US$37",
+    "rating_raw": "Puntuación: 8,5\n8,5\nMuy bien\n62 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.717544"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "KIWI SUITE MONTAÑiTA",
+    "precio_raw": "US$50",
+    "rating_raw": "Puntuación: 8,4\n8,4\nMuy bien\n8 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.760443"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "Montañita Cabañas",
+    "precio_raw": "US$80",
+    "rating_raw": "Puntuación: 8,6\n8,6\nFabuloso\n77 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.798051"
+  },
+  {
+    "fuente": "booking",
+    "destino": "Montanita Ecuador",
+    "nombre": "OCEAN DRIVE LODGE",
+    "precio_raw": "US$120",
+    "rating_raw": "Puntuación: 8,6\n8,6\nFabuloso\n57 comentarios",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T20:06:51.832241"
+  }
+]

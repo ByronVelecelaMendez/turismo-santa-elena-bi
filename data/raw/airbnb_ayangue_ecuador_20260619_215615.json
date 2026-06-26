@@ -1,0 +1,182 @@
+[
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Home in Ayangue",
+    "precio_raw": "$640 \n$461\nShow price breakdown\n \nfor 2 nights",
+    "rating_raw": "5.0 (6)",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.561609"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Home in Santa Elena",
+    "precio_raw": "$495\nShow price breakdown\n \nfor 2 nights\n$495 for 2 nights",
+    "rating_raw": "5.0 (19)",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.599787"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Hotel in Ayangue",
+    "precio_raw": "$169 \n$135\nShow price breakdown\n \nfor 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.635943"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Home in Ayangue",
+    "precio_raw": "$287 \n$234\nShow price breakdown\n \nfor 2 nights",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.686899"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Place to stay in Ayangue",
+    "precio_raw": "$94\nShow price breakdown\n \nfor 2 nights\n$94 for 2 nights",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.702131"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Hotel in Ayangue",
+    "precio_raw": "$111\nShow price breakdown\n \nfor 2 nights\n$111 for 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.736082"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Villa in Santa Elena",
+    "precio_raw": "$268\nShow price breakdown\n \nfor 2 nights\n$268 for 2 nights",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.763789"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Bungalow in Montañita",
+    "precio_raw": "$129 \n$88\nShow price breakdown\n \nfor 2 nights\nExtended stay discount",
+    "rating_raw": "4.9 (107)",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.795611"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Home in Ayangue",
+    "precio_raw": "$804 \n$684\nShow price breakdown\n \nfor 2 nights",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.819484"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Home in Monteverde",
+    "precio_raw": "$341 \n$297\nShow price breakdown\n \nfor 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.852833"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Room in Montañita",
+    "precio_raw": "$92 \n$80\nShow price breakdown\n \nfor 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.889986"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Place to stay in Ayangue",
+    "precio_raw": "$196 \n$170\nShow price breakdown\n \nfor 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": "4.9 (29)",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.924055"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Boutique hotel in Ayangue",
+    "precio_raw": "$150\nShow price breakdown\n \nfor 2 nights\n$150 for 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.956329"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Place to stay in Ayangue",
+    "precio_raw": "$74\nShow price breakdown\n \nfor 2 nights\n$74 for 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": "4.8 (15)",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:14.995814"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Hotel room in Ayangue",
+    "precio_raw": "$184 \n$146\nShow price breakdown\n \nfor 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:15.040709"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Apartment in Montañita",
+    "precio_raw": "$192 \n$122\nShow price breakdown\n \nfor 2 nights",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:15.082097"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Boutique hotel in Ayangue",
+    "precio_raw": "$196 \n$170\nShow price breakdown\n \nfor 2 nights\nPay $0 today\nFree cancellation",
+    "rating_raw": null,
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:15.120248"
+  },
+  {
+    "fuente": "airbnb",
+    "destino": "Ayangue Ecuador",
+    "nombre": "Villa in Ayangue",
+    "precio_raw": "$328 \n$286\nShow price breakdown\n \nfor 2 nights",
+    "rating_raw": "4.9 (111)",
+    "checkin": "2026-07-19",
+    "checkout": "2026-07-21",
+    "fecha_extraccion": "2026-06-19T21:56:15.156953"
+  }
+]

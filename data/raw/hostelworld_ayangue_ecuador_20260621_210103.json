@@ -1,0 +1,22 @@
+[
+  {
+    "fuente": "hostelworld",
+    "destino": "ayangue",
+    "nombre": "Casa de Orion",
+    "precio_raw": null,
+    "rating_raw": "9.9",
+    "numero_resenas": "2",
+    "url_detalle": "https://www.hostelworld.com/es/pensiones/p/328529/casa-de-orion/",
+    "fecha_extraccion": "2026-06-21T21:00:57.975032"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "ayangue",
+    "nombre": "Muyuyo Lodge",
+    "precio_raw": null,
+    "rating_raw": null,
+    "numero_resenas": null,
+    "url_detalle": "https://www.hostelworld.com/es/pensiones/p/65081/muyuyo-lodge/",
+    "fecha_extraccion": "2026-06-21T21:01:03.809144"
+  }
+]

@@ -1,0 +1,102 @@
+[
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "My Little House Surf&backpacker Hostel",
+    "precio_raw": "US$4.70",
+    "rating_raw": "9.5",
+    "numero_resenas": "1342",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/97628/my-little-house-surf-and-backpacker-hostel/",
+    "fecha_extraccion": "2026-06-21T20:59:29.541574"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "Hostal Casa del Sol",
+    "precio_raw": "US$4.70",
+    "rating_raw": "9.5",
+    "numero_resenas": "241",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/90828/hostal-casa-del-sol/",
+    "fecha_extraccion": "2026-06-21T20:59:35.678074"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "ESPERANTO B&B Surf & Backpacker hostel",
+    "precio_raw": "US$6.00",
+    "rating_raw": "9.7",
+    "numero_resenas": "1176",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/55489/esperanto-b-and-b-surf-and-backpacker-hostel/",
+    "fecha_extraccion": "2026-06-21T20:59:41.077081"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "Hidden House Hostel Montañita",
+    "precio_raw": "US$4.70",
+    "rating_raw": "7.1",
+    "numero_resenas": "682",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/92827/hidden-house-hostel-montanita/",
+    "fecha_extraccion": "2026-06-21T20:59:46.743754"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "Paradise Project Hostel Backpacker",
+    "precio_raw": "US$4.70",
+    "rating_raw": "8.6",
+    "numero_resenas": "96",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/317441/paradise-project-hostel-backpacker/",
+    "fecha_extraccion": "2026-06-21T20:59:54.620214"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "Kiwi Hostel Montanita",
+    "precio_raw": "US$4.70",
+    "rating_raw": "6.0",
+    "numero_resenas": "222",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/100814/kiwi-hostel-montanita/",
+    "fecha_extraccion": "2026-06-21T21:00:00.120454"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "Kamala Surf & Backpacker Hostel",
+    "precio_raw": "US$4.70",
+    "rating_raw": "8.9",
+    "numero_resenas": "20",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/320925/kamala-surf-and-backpacker-hostel/",
+    "fecha_extraccion": "2026-06-21T21:00:05.509146"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "Montañita Cabañas Hostel",
+    "precio_raw": "US$4.70",
+    "rating_raw": "8.6",
+    "numero_resenas": "13",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/298041/montanita-cabanas-hostel/",
+    "fecha_extraccion": "2026-06-21T21:00:11.334103"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "The Palms Montanita",
+    "precio_raw": "US$4.70",
+    "rating_raw": "9.7",
+    "numero_resenas": "1",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/322738/the-palms-montanita/",
+    "fecha_extraccion": "2026-06-21T21:00:19.289027"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "montanita",
+    "nombre": "Hostal Restaurante Ebenezer",
+    "precio_raw": "US$4.70",
+    "rating_raw": "9.7",
+    "numero_resenas": null,
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/332785/hostal-restaurante-ebenezer/",
+    "fecha_extraccion": "2026-06-21T21:00:24.602316"
+  }
+]

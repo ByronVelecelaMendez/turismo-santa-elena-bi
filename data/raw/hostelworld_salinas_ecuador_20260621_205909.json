@@ -1,0 +1,32 @@
+[
+  {
+    "fuente": "hostelworld",
+    "destino": "salinas",
+    "nombre": "Chescos Hostel & Hotel",
+    "precio_raw": null,
+    "rating_raw": "6.9",
+    "numero_resenas": "156",
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/87310/chescos-hostel-and-hotel/",
+    "fecha_extraccion": "2026-06-21T20:58:58.081730"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "salinas",
+    "nombre": "Hostal Haziel",
+    "precio_raw": null,
+    "rating_raw": "7.7",
+    "numero_resenas": null,
+    "url_detalle": "https://www.hostelworld.com/es/albergues/p/338846/hostal-haziel/",
+    "fecha_extraccion": "2026-06-21T20:59:03.566062"
+  },
+  {
+    "fuente": "hostelworld",
+    "destino": "salinas",
+    "nombre": "Hotel Mileto",
+    "precio_raw": null,
+    "rating_raw": "7.7",
+    "numero_resenas": null,
+    "url_detalle": "https://www.hostelworld.com/es/hoteles/p/266156/hotel-mileto/",
+    "fecha_extraccion": "2026-06-21T20:59:09.496795"
+  }
+]
