@@ -47,7 +47,7 @@ def procesar_encuesta_staging():
     ruta_final = os.path.join(ruta_output, f"staging_encuesta_{timestamp}.json")
     
     with open(ruta_final, "w", encoding="utf-8") as f:
-        json.dump(registros_limpios, f, ensure_ascii=False, indent=4)
+        json.dump(registros_limpios, f, ensure_ascii=False, indent=2)
         
     print(f"[+] ÉXITO: Encuesta procesada y guardada en: {ruta_final}")
     print(f"[*] Respuestas totales procesadas: {len(registros_limpios)}")
