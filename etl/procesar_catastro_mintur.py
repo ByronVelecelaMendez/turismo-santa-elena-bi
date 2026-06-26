@@ -1,7 +1,11 @@
 import json
 import os
 import pandas as pd
+import logging
 from datetime import datetime
+
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logger = logging.getLogger(__name__)
 
 ARCHIVOS = {
     "2023-10": "data/csv/1era-quincena-octubre-catastro-nacional-2023-banecuador-sri.xlsx",
@@ -68,46 +72,71 @@ def main():
     # Aseguramos que existan las carpetas de salida
     os.makedirs("data/raw", exist_ok=True)
     os.makedirs("data/staging", exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     resumen = {}
     todos_los_registros_staging = []  # Lista para unificar toda la data de MINTUR
 
     for periodo, ruta in ARCHIVOS.items():
         if not os.path.exists(ruta):
-            print(f"[AVISO] No encontré el archivo: {ruta}")
+            logger.warning(f"No encontré el archivo: {ruta}")
             continue
 
-        print(f"\nProcesando catastro {periodo}...")
+        logger.info(f"Procesando catastro {periodo}...")
         registros = procesar_catastro(periodo, ruta)
-        print(f"  -> {len(registros)} establecimientos en los 6 destinos oficiales")
+
+        # Validar que haya registros después del filtrado
+        if not registros:
+            logger.warning(f"{periodo}: No hay registros después del filtrado")
+            continue
+
+        logger.info(f"  → {len(registros)} establecimientos en los 6 destinos oficiales")
 
         # Guardamos el respaldo individual en raw
-        archivo_raw = f"data/raw/mintur_catastro_{periodo}_{timestamp}.json"
-        with open(archivo_raw, "w", encoding="utf-8") as f:
-            json.dump(registros, f, ensure_ascii=False, indent=2, default=str)
-        print(f"  -> Respaldado en raw: {archivo_raw}")
-        
+        try:
+            archivo_raw = f"data/raw/mintur_catastro_{periodo}_{timestamp}.json"
+            with open(archivo_raw, "w", encoding="utf-8") as f:
+                json.dump(registros, f, ensure_ascii=False, indent=2, default=str)
+            logger.info(f"  → Respaldado en raw: {archivo_raw}")
+        except IOError as e:
+            logger.error(f"  → ERROR al guardar {archivo_raw}: {e}")
+            continue
+
         # Acumulamos para la capa de Staging
         todos_los_registros_staging.extend(registros)
         resumen[periodo] = len(registros)
 
+    # Validar que se procesó al menos un archivo
+    if not todos_los_registros_staging:
+        logger.error("No se procesó ningún archivo. Verifica las rutas en ARCHIVOS.")
+        return
+
     # === GUARDAR EL ARCHIVO UNIFICADO EN STAGING ===
-    if todos_los_registros_staging:
+    try:
         archivo_staging = f"data/staging/staging_mintur_{timestamp}.json"
         with open(archivo_staging, "w", encoding="utf-8") as f:
-            json.dump(todos_los_registros_staging, f, ensure_ascii=False, indent=4, default=str)
-        print(f"\n[+] ÉXITO STAGING: Archivo unificado guardado en: {archivo_staging}")
-        print(f"[*] Total general de registros oficiales consolidados: {len(todos_los_registros_staging)}")
+            json.dump(todos_los_registros_staging, f, ensure_ascii=False, indent=2, default=str)
+        logger.info(f"\n[✓] ÉXITO STAGING: Archivo unificado guardado en: {archivo_staging}")
+        logger.info(f"[*] Total general de registros oficiales consolidados: {len(todos_los_registros_staging)}")
+    except IOError as e:
+        logger.error(f"Error al guardar archivo staging: {e}")
+        return
 
-    print("\n=== Resumen comparativo ===")
+    logger.info("\n=== Resumen comparativo ===")
     for periodo, total in resumen.items():
-        print(f"{periodo}: {total} alojamientos registrados")
+        logger.info(f"{periodo}: {total} alojamientos registrados")
 
+    # Calcular crecimiento con protección contra división por cero
     if len(resumen) == 2:
         periodos = sorted(resumen.keys())
-        crecimiento = ((resumen[periodos[1]] - resumen[periodos[0]]) / resumen[periodos[0]]) * 100
-        print(f"\nCrecimiento {periodos[0]} -> {periodos[1]}: {crecimiento:.1f}%")
+        primer_periodo_total = resumen[periodos[0]]
+        
+        if primer_periodo_total > 0:
+            crecimiento = ((resumen[periodos[1]] - primer_periodo_total) / primer_periodo_total) * 100
+            logger.info(f"\nCrecimiento {periodos[0]} → {periodos[1]}: {crecimiento:.1f}%")
+        else:
+            logger.warning(f"No se puede calcular crecimiento: {periodos[0]} tiene 0 registros")
+
 
 if __name__ == "__main__":
     main()
