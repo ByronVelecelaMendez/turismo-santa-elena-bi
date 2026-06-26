@@ -66,7 +66,7 @@ def procesar_trends_staging():
     ruta_final = os.path.join(ruta_output, f"staging_trends_{timestamp}.json")
 
     with open(ruta_final, "w", encoding="utf-8") as f:
-        json.dump(registros_limpios, f, ensure_ascii=False, indent=4)
+        json.dump(registros_limpios, f, ensure_ascii=False, indent=2)
 
     print(f"[+] ÉXITO STAGING: Google Trends procesado en: {ruta_final}")
     print(f"[*] Total de métricas temporales en staging: {len(registros_limpios)}")
