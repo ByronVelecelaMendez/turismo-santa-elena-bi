@@ -102,8 +102,6 @@ def main():
 
         if clave not in vistos:
             vistos.add(clave)
-            r.pop("_precio_raw")
-            r.pop("_rating_raw")
             final.append(r)
 
 

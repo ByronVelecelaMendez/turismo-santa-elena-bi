@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import logging
 from datetime import datetime
+from collections import Counter
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
@@ -28,6 +29,36 @@ def limpiar(valor):
     if pd.isna(valor):
         return None
     return valor
+
+
+def deduplicar_registros(registros, periodo):
+    """
+    Elimina duplicados exactos dentro de un mismo periodo, usando como clave
+    (ruc, nombre_establecimiento, parroquia). Se conserva la primera ocurrencia.
+    Esto NO elimina el mismo RUC si aparece en periodos distintos (2023 vs 2025),
+    ya que eso es informacion valida para el calculo de crecimiento.
+    """
+    vistos = set()
+    limpios = []
+    duplicados_eliminados = []
+
+    for r in registros:
+        clave = (r["ruc"], r["nombre_establecimiento"], r["parroquia"])
+        if clave in vistos:
+            duplicados_eliminados.append(r)
+            continue
+        vistos.add(clave)
+        limpios.append(r)
+
+    if duplicados_eliminados:
+        logger.warning(
+            f"  → {periodo}: {len(duplicados_eliminados)} duplicados eliminados "
+            f"(mismo RUC + nombre + parroquia repetido)"
+        )
+        for dup in duplicados_eliminados[:5]:  # muestra hasta 5 ejemplos en el log
+            logger.warning(f"      Eliminado: RUC {dup['ruc']} | {dup['nombre_establecimiento']} | {dup['parroquia']}")
+
+    return limpios, len(duplicados_eliminados)
 
 
 def procesar_catastro(periodo, ruta):
@@ -65,17 +96,20 @@ def procesar_catastro(periodo, ruta):
             "fecha_extraccion": datetime.now().isoformat(),
         })
 
-    return registros
+    # Deduplicar dentro de este periodo antes de devolver
+    registros_limpios, total_duplicados = deduplicar_registros(registros, periodo)
+
+    return registros_limpios, total_duplicados
 
 
 def main():
-    # Aseguramos que existan las carpetas de salida
     os.makedirs("data/raw", exist_ok=True)
     os.makedirs("data/staging", exist_ok=True)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     resumen = {}
-    todos_los_registros_staging = []  # Lista para unificar toda la data de MINTUR
+    total_duplicados_global = 0
+    todos_los_registros_staging = []
 
     for periodo, ruta in ARCHIVOS.items():
         if not os.path.exists(ruta):
@@ -83,16 +117,15 @@ def main():
             continue
 
         logger.info(f"Procesando catastro {periodo}...")
-        registros = procesar_catastro(periodo, ruta)
+        registros, duplicados = procesar_catastro(periodo, ruta)
+        total_duplicados_global += duplicados
 
-        # Validar que haya registros después del filtrado
         if not registros:
             logger.warning(f"{periodo}: No hay registros después del filtrado")
             continue
 
-        logger.info(f"  → {len(registros)} establecimientos en los 6 destinos oficiales")
+        logger.info(f"  → {len(registros)} establecimientos en los 6 destinos oficiales (ya deduplicado)")
 
-        # Guardamos el respaldo individual en raw
         try:
             archivo_raw = f"data/raw/mintur_catastro_{periodo}_{timestamp}.json"
             with open(archivo_raw, "w", encoding="utf-8") as f:
@@ -102,22 +135,20 @@ def main():
             logger.error(f"  → ERROR al guardar {archivo_raw}: {e}")
             continue
 
-        # Acumulamos para la capa de Staging
         todos_los_registros_staging.extend(registros)
         resumen[periodo] = len(registros)
 
-    # Validar que se procesó al menos un archivo
     if not todos_los_registros_staging:
         logger.error("No se procesó ningún archivo. Verifica las rutas en ARCHIVOS.")
         return
 
-    # === GUARDAR EL ARCHIVO UNIFICADO EN STAGING ===
     try:
         archivo_staging = f"data/staging/staging_mintur_{timestamp}.json"
         with open(archivo_staging, "w", encoding="utf-8") as f:
             json.dump(todos_los_registros_staging, f, ensure_ascii=False, indent=2, default=str)
         logger.info(f"\n[✓] ÉXITO STAGING: Archivo unificado guardado en: {archivo_staging}")
         logger.info(f"[*] Total general de registros oficiales consolidados: {len(todos_los_registros_staging)}")
+        logger.info(f"[*] Total duplicados eliminados (ambos periodos): {total_duplicados_global}")
     except IOError as e:
         logger.error(f"Error al guardar archivo staging: {e}")
         return
@@ -126,11 +157,10 @@ def main():
     for periodo, total in resumen.items():
         logger.info(f"{periodo}: {total} alojamientos registrados")
 
-    # Calcular crecimiento con protección contra división por cero
     if len(resumen) == 2:
         periodos = sorted(resumen.keys())
         primer_periodo_total = resumen[periodos[0]]
-        
+
         if primer_periodo_total > 0:
             crecimiento = ((resumen[periodos[1]] - primer_periodo_total) / primer_periodo_total) * 100
             logger.info(f"\nCrecimiento {periodos[0]} → {periodos[1]}: {crecimiento:.1f}%")

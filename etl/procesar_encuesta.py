@@ -90,12 +90,7 @@ def procesar_encuesta_staging():
         df["destino_homologado"] = "sin_clasificar"
         logging.warning("No se encontró la columna del destino.")
 
-    # Convertir la fecha
-    df["Marca temporal"] = pd.to_datetime(
-    df["Marca temporal"],
-    errors="coerce",
-    format="mixed"
-)
+   
 
     # Convertir las calificaciones
     columnas_calificacion = [
