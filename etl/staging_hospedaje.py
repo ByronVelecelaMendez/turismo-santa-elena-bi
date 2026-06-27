@@ -77,13 +77,15 @@ def main():
                 "rating_normalizado": normalizar_rating(r.get("rating_raw"), plataforma),
                 "num_resenas": extraer_num_resenas(r.get("rating_raw")),
                 "tipo_alojamiento": r.get("tipo_alojamiento_raw"),
-                "fecha_extraccion": r.get("fecha_extraccion")
+                "fecha_extraccion": r.get("fecha_extraccion"),
+                "_precio_raw": r.get("precio_raw"),
+                "_rating_raw": r.get("rating_raw"),
             })
 
         staging.extend(procesados)
         resumen[plataforma] = len(procesados)
 
-  
+
 
     vistos = set()
     final = []
@@ -93,14 +95,18 @@ def main():
         clave = (
             r["plataforma"],
             r["destino_slug"],
-            r["nombre_alojamiento"]
+            r["nombre_alojamiento"],
+            r["_precio_raw"],
+            r["_rating_raw"],
         )
 
         if clave not in vistos:
             vistos.add(clave)
+            r.pop("_precio_raw")
+            r.pop("_rating_raw")
             final.append(r)
 
-    
+
 
     os.makedirs("data/staging", exist_ok=True)
 
@@ -112,6 +118,10 @@ def main():
     print("\n===== REPORTE =====")
     print("Total staging:", len(final))
     print("Archivo:", output)
+
+    print("\n===== POR PLATAFORMA (en archivo final) =====")
+    from collections import Counter
+    print(Counter(r["plataforma"] for r in final))
 
 
 if __name__ == "__main__":
