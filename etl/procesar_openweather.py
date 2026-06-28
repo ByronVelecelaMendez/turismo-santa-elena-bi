@@ -4,9 +4,15 @@ import os
 from collections import Counter
 from datetime import datetime
 
-ARCHIVOS_OPENWEATHER = "data/raw/openweather_*.json"
+# IMPORTANTE: tras la reorganizacion de la Zona Raw en subcarpetas por tipo
+# de fuente (ver README), OpenWeather se guarda en data/raw/api/openweather/,
+# no directo en data/raw/.
+ARCHIVOS_OPENWEATHER = "data/raw/api/openweather/openweather_*.json"
 
-# Clasificación de temporada por mes, segun la regla de negocio definida en E2
+# Clasificacion de temporada por mes, segun la regla de negocio definida en E2:
+# alta (Dic-Ene-Feb-Jul), media (Mar-Ago), baja (Abr-May-Jun-Sep-Oct-Nov).
+# Esta misma regla es la que documenta la matriz de trazabilidad del E2
+# para DIM_TEMPORADA.nombre_temporada.
 TEMPORADA_POR_MES = {
     12: "alta", 1: "alta", 2: "alta", 7: "alta",
     3: "media", 8: "media",
@@ -15,6 +21,11 @@ TEMPORADA_POR_MES = {
 
 
 def clasificar_temporada(fecha_extraccion: str) -> str:
+    """Convierte la fecha de extraccion del registro en su temporada
+    correspondiente, segun el mes. Se usa la fecha de extraccion (no una
+    fecha de viaje) porque OpenWeather solo expone clima actual, no
+    pronostico ni historico; el dato representa el clima del momento en
+    que se corrio el scraper."""
     try:
         fecha = datetime.fromisoformat(fecha_extraccion)
         return TEMPORADA_POR_MES.get(fecha.month, "sin_clasificar")
@@ -39,7 +50,7 @@ def main():
     print(f"Registros crudos de OpenWeather encontrados: {len(crudos)}")
 
     if not crudos:
-        print("[ERROR] No se encontraron archivos de OpenWeather en data/raw/. "
+        print("[ERROR] No se encontraron archivos de OpenWeather en data/raw/api/openweather/. "
               "Corre primero scraping/openweather_api.py")
         return
 
@@ -55,7 +66,13 @@ def main():
             "fecha_extraccion": r.get("fecha_extraccion"),
         })
 
-    # Agregado por temporada: promedio de temperatura y condicion mas frecuente
+    # Agregado por temporada: promedio de temperatura y condicion mas
+    # frecuente (moda). NOTA DE CALIDAD: la extraccion actual solo se hizo
+    # en una fecha (22 de junio de 2026), por lo que solo existen
+    # observaciones para la temporada "baja"; "alta" y "media" quedaran
+    # vacias hasta que se programen extracciones recurrentes en otros
+    # meses del año. Esto se documenta como limitacion conocida, no se
+    # rellena con datos ficticios.
     resumen_temporada = {}
     for temporada in set(r["temporada_clasificada"] for r in registros_staging):
         filas = [r for r in registros_staging if r["temporada_clasificada"] == temporada]
