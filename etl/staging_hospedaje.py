@@ -10,7 +10,9 @@ from utils_staging import (
     precio_total_a_por_noche,
     normalizar_rating,
     extraer_num_resenas,
-    normalizar_texto
+    normalizar_texto,
+    extraer_tipo_alojamiento,
+    extraer_tipo_alojamiento_url,
 )
 
 # LOG
@@ -38,6 +40,42 @@ def cargar_archivos_fuente(patron: str):
     return registros
 
 
+def obtener_tipo_alojamiento(plataforma: str, r: dict):
+    """
+    Cada plataforma expone el tipo de alojamiento de forma distinta
+    (o no lo expone). Se resuelve caso por caso:
+      - kayak: viene embebido en el texto crudo completo ("raw")
+      - hostelworld: se infiere de la categoria en la URL del listado
+      - booking / airbnb: no exponen este dato en el scraper actual
+    """
+    if plataforma == "kayak":
+        return extraer_tipo_alojamiento(r.get("raw"))
+    if plataforma == "hostelworld":
+        return extraer_tipo_alojamiento_url(r.get("url_detalle"))
+    return None
+
+
+def obtener_num_resenas(plataforma: str, r: dict):
+    """
+    Booking y Airbnb traen el numero de resenas embebido dentro del
+    texto de rating_raw (ej. '1.170 comentarios', '5.0 (6)').
+    KAYAK y Hostelworld ya lo exponen en un campo separado y limpio.
+    """
+    if plataforma in ("kayak",):
+        valor = r.get("num_resenas")
+    elif plataforma == "hostelworld":
+        valor = r.get("numero_resenas")
+    else:
+        valor = None
+
+    if valor is not None:
+        try:
+            return int(str(valor).replace(",", "").replace(".", ""))
+        except (TypeError, ValueError):
+            pass
+
+    # Fallback: intentar extraerlo del texto de rating si el campo directo fallo
+    return extraer_num_resenas(r.get("rating_raw"))
 
 
 def main():
@@ -75,8 +113,8 @@ def main():
                 "nombre_alojamiento": nombre,
                 "precio_noche_usd": extraer_precio_usd(r.get("precio_raw")),
                 "rating_normalizado": normalizar_rating(r.get("rating_raw"), plataforma),
-                "num_resenas": extraer_num_resenas(r.get("rating_raw")),
-                "tipo_alojamiento": r.get("tipo_alojamiento_raw"),
+                "num_resenas": obtener_num_resenas(plataforma, r),
+                "tipo_alojamiento": obtener_tipo_alojamiento(plataforma, r),
                 "fecha_extraccion": r.get("fecha_extraccion"),
                 "_precio_raw": r.get("precio_raw"),
                 "_rating_raw": r.get("rating_raw"),
@@ -120,6 +158,9 @@ def main():
     print("\n===== POR PLATAFORMA (en archivo final) =====")
     from collections import Counter
     print(Counter(r["plataforma"] for r in final))
+
+    con_tipo = sum(1 for r in final if r["tipo_alojamiento"] is not None)
+    print(f"\nCon tipo_alojamiento detectado: {con_tipo}/{len(final)}")
 
 
 if __name__ == "__main__":

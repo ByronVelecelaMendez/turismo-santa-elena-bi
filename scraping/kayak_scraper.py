@@ -165,9 +165,9 @@ def scrape(destino, url, browser):
 
 
 def guardar(data, destino):
-    os.makedirs("data/raw", exist_ok=True)
+    os.makedirs("data/raw/scraping/kayak", exist_ok=True)
 
-    archivo = f"data/raw/kayak_{destino}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    archivo = f"data/raw/scraping/kayak/kayak_{destino}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
     with open(archivo, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)

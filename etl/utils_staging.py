@@ -115,3 +115,40 @@ def extraer_num_resenas(texto: str):
         return int(match.group(1).replace(",", "").replace(".", ""))
     except:
         return None
+
+
+TIPOS_ALOJAMIENTO_CONOCIDOS = [
+    "Hotel boutique", "Bed and breakfast", "Casa de huéspedes",
+    "Hotel", "Hostal", "Hostel", "Lodge", "Eco-lodge", "Glamping",
+    "Hacienda", "Resort", "Villa", "Apartamento", "Departamento", "Casa",
+]
+
+
+def extraer_tipo_alojamiento(texto: str) -> str | None:
+    """Busca el tipo de alojamiento dentro de un texto crudo, probando
+    las frases mas especificas primero para no perder matices
+    (ej. 'Hotel boutique' antes que 'Hotel')."""
+    if not texto:
+        return None
+    for tipo in TIPOS_ALOJAMIENTO_CONOCIDOS:
+        if tipo.lower() in str(texto).lower():
+            return tipo
+    return None
+
+def extraer_tipo_alojamiento_url(url: str) -> str | None:
+    """Hostelworld estructura sus URLs por categoria:
+    /es/hoteles/, /es/albergues/, /es/pensiones/, etc.
+    Esto es mas confiable que buscar texto libre."""
+    if not url:
+        return None
+    mapa_url = {
+        "/hoteles/": "Hotel",
+        "/albergues/": "Hostel",
+        "/pensiones/": "Casa de huéspedes",
+        "/apartamentos/": "Apartamento",
+    }
+    url_lower = str(url).lower()
+    for fragmento, tipo in mapa_url.items():
+        if fragmento in url_lower:
+            return tipo
+    return None

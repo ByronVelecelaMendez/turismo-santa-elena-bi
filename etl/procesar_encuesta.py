@@ -1,14 +1,17 @@
 import os
 import json
 import logging
+import shutil
 import pandas as pd
 from datetime import datetime
 
 # Configuración
 RUTA_CSV = "data/csv/Experiencia_Turística_en_la_Provincia_de_Santa_Elena.csv"
+RUTA_RAW = "data/raw/fuente_propia/encuesta"
 RUTA_STAGING = "data/staging"
 RUTA_LOGS = "logs"
 
+os.makedirs(RUTA_RAW, exist_ok=True)
 os.makedirs(RUTA_STAGING, exist_ok=True)
 os.makedirs(RUTA_LOGS, exist_ok=True)
 
@@ -65,6 +68,14 @@ def procesar_encuesta_staging():
     if not os.path.exists(RUTA_CSV):
         print(f"[-] No existe el archivo: {RUTA_CSV}")
         return
+
+    # Respaldo inmutable en Zona Raw: copia exacta del CSV original,
+    # sin ninguna transformacion, con nomenclatura fuente_timestamp.ext
+    timestamp_raw = datetime.now().strftime("%Y%m%d")
+    ruta_raw_destino = os.path.join(RUTA_RAW, f"encuesta_propia_{timestamp_raw}.csv")
+    shutil.copy2(RUTA_CSV, ruta_raw_destino)
+    logging.info(f"Respaldo inmutable guardado en Zona Raw: {ruta_raw_destino}")
+    print(f"[*] Respaldo Raw guardado: {ruta_raw_destino}")
 
     print("[*] Leyendo encuesta...")
 

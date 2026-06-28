@@ -39,7 +39,7 @@ def consultar_lote(pytrends, lote, intentos=3):
 
 
 def main():
-    os.makedirs("data/raw", exist_ok=True)
+    os.makedirs("data/raw/api/google_trends", exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     pytrends = TrendReq(hl="es-EC", tz=-300)
@@ -71,7 +71,8 @@ def main():
         print(f"  -> {len(df)} semanas de datos para {len(lote)} términos")
         time.sleep(10)
 
-    archivo = f"data/raw/google_trends_santa_elena_{timestamp}.json"
+    archivo = f"data/raw/api/google_trends/google_trends_santa_elena_{timestamp}.json"
+    
     with open(archivo, "w", encoding="utf-8") as f:
         json.dump(resultados, f, ensure_ascii=False, indent=2)
 

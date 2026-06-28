@@ -132,13 +132,12 @@ def scrape_hostelworld(browser, destino, url):
 
     return resultados
 
-
 def guardar_raw(datos, destino):
 
-    os.makedirs("data/raw", exist_ok=True)
+    os.makedirs("data/raw/scraping/hostelworld", exist_ok=True)
 
     archivo = (
-        f"data/raw/hostelworld_{destino}_ecuador_"
+        f"data/raw/scraping/hostelworld/hostelworld_{destino}_ecuador_"
         f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     )
 

@@ -103,7 +103,7 @@ def procesar_catastro(periodo, ruta):
 
 
 def main():
-    os.makedirs("data/raw", exist_ok=True)
+    os.makedirs("data/raw/archivos/mintur", exist_ok=True)
     os.makedirs("data/staging", exist_ok=True)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -127,7 +127,7 @@ def main():
         logger.info(f"  → {len(registros)} establecimientos en los 6 destinos oficiales (ya deduplicado)")
 
         try:
-            archivo_raw = f"data/raw/mintur_catastro_{periodo}_{timestamp}.json"
+            archivo_raw = f"data/raw/archivos/mintur/mintur_catastro_{periodo}_{timestamp}.json"
             with open(archivo_raw, "w", encoding="utf-8") as f:
                 json.dump(registros, f, ensure_ascii=False, indent=2, default=str)
             logger.info(f"  → Respaldado en raw: {archivo_raw}")

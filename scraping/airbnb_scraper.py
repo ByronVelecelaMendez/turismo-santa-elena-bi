@@ -106,10 +106,10 @@ def scrape_airbnb(destino: str, browser) -> list:
 
 
 def guardar_raw(datos: list, destino: str):
-    os.makedirs("data/raw", exist_ok=True)
+    os.makedirs("data/raw/scraping/airbnb", exist_ok=True)
 
     nombre_archivo = (
-        f"data/raw/airbnb_{destino.replace(' ', '_').lower()}_"
+        f"data/raw/scraping/airbnb/airbnb_{destino.replace(' ', '_').lower()}_"
         f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     )
 

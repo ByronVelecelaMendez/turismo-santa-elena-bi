@@ -54,7 +54,7 @@ def consultar_clima(destino, lat, lon):
 
 
 def main():
-    os.makedirs("data/raw", exist_ok=True)
+    os.makedirs("data/raw/api/openweather", exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     resultados = []
 
@@ -65,7 +65,8 @@ def main():
             resultados.append(dato)
             print(f"  -> {dato['temperatura_c']}°C, {dato['condicion_clima']}")
 
-    archivo = f"data/raw/openweather_santa_elena_{timestamp}.json"
+    archivo = f"data/raw/api/openweather/openweather_santa_elena_{timestamp}.json"
+    
     with open(archivo, "w", encoding="utf-8") as f:
         json.dump(resultados, f, ensure_ascii=False, indent=2)
 

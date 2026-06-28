@@ -81,8 +81,8 @@ def scrape_booking(destino: str, browser) -> list:
 
 
 def guardar_raw(datos: list, destino: str):
-    os.makedirs("data/raw", exist_ok=True)
-    nombre_archivo = f"data/raw/booking_{destino.replace(' ', '_').lower()}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    os.makedirs("data/raw/scraping/booking", exist_ok=True)
+    nombre_archivo = f"data/raw/scraping/booking/booking_{destino.replace(' ', '_').lower()}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     with open(nombre_archivo, "w", encoding="utf-8") as f:
         json.dump(datos, f, ensure_ascii=False, indent=2)
     print(f"Guardado: {nombre_archivo} ({len(datos)} registros)")
