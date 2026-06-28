@@ -81,10 +81,10 @@ def obtener_num_resenas(plataforma: str, r: dict):
 def main():
 
     patrones = {
-        "booking": "data/raw/booking_*.json",
-        "airbnb": "data/raw/airbnb_*.json",
-        "kayak": "data/raw/kayak_*.json",
-        "hostelworld": "data/raw/hostelworld_*.json",
+        "booking": "data/raw/scraping/booking/booking_*.json",
+        "airbnb": "data/raw/scraping/airbnb/airbnb_*.json",
+        "kayak": "data/raw/scraping/kayak/kayak_*.json",
+        "hostelworld": "data/raw/scraping/hostelworld/hostelworld_*.json",
     }
 
     staging = []

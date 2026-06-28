@@ -182,10 +182,10 @@ def generar_reporte():
     hospedaje = cargar_json(archivo_hospedaje) if archivo_hospedaje else []
 
     raw_hospedaje = (
-        contar_raw("data/raw/booking_*.json")
-        + contar_raw("data/raw/airbnb_*.json")
-        + contar_raw("data/raw/kayak_*.json")
-        + contar_raw("data/raw/hostelworld_*.json")
+        contar_raw("data/raw/scraping/booking/booking_*.json")
+        + contar_raw("data/raw/scraping/airbnb/airbnb_*.json")
+        + contar_raw("data/raw/scraping/kayak/kayak_*.json")
+        + contar_raw("data/raw/scraping/hostelworld/hostelworld_*.json")
     )
 
     dup_hospedaje = control_duplicados(
