@@ -119,20 +119,35 @@ python etl/carga_dimensiones_fijas.py  # DIM_PLATAFORMA + DIM_DESTINO
 turismo-santa-elena-bi/
 
 ├── data/
+
 │   ├── csv/              # Archivos descargados manualmente (NO en Git)
+
 │   ├── raw/               # Zona Raw - datos crudos inmutables (NO en Git)
+
 │   │   ├── scraping/       # Booking, Airbnb, KAYAK, Hostelworld
+
 │   │   ├── api/            # OpenWeather, Google Trends
+
 │   │   ├── archivos/       # MINTUR
+
 │   │   └── fuente_propia/  # Encuesta
+
 │   ├── staging/           # Zona Staging - datos limpios (NO en Git)
+
 │   └── quality/            # Reportes de calidad (NO en Git)
+
 ├── scraping/               # Scripts de extracción (Playwright/requests/pytrends)
+
 ├── etl/                    # Scripts de staging, calidad y carga al DW
+
 ├── database/                # Conexión a PostgreSQL (SQLAlchemy)
+
 ├── logs/                   # Logs estructurados del pipeline (NO en Git)
+
 ├── dw_turismo_santa_elena.sql  # Schema del Data Warehouse (Star Schema)
+
 ├── requirements.txt
+
 └── .env                     # Variables de entorno (NO en Git)
 
 ## Notas sobre cobertura de datos
