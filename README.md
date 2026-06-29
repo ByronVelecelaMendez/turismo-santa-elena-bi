@@ -116,39 +116,25 @@ python etl/carga_dimensiones_fijas.py  # DIM_PLATAFORMA + DIM_DESTINO
 
 ## Estructura del repositorio
 
+```
 turismo-santa-elena-bi/
-
 ├── data/
-
-│   ├── csv/              # Archivos descargados manualmente (NO en Git)
-
-│   ├── raw/               # Zona Raw - datos crudos inmutables (NO en Git)
-
+│   ├── csv/                # Archivos descargados manualmente (NO en Git)
+│   ├── raw/                # Zona Raw - datos crudos inmutables (NO en Git)
 │   │   ├── scraping/       # Booking, Airbnb, KAYAK, Hostelworld
-
 │   │   ├── api/            # OpenWeather, Google Trends
-
 │   │   ├── archivos/       # MINTUR
-
 │   │   └── fuente_propia/  # Encuesta
-
-│   ├── staging/           # Zona Staging - datos limpios (NO en Git)
-
+│   ├── staging/            # Zona Staging - datos limpios (NO en Git)
 │   └── quality/            # Reportes de calidad (NO en Git)
-
-├── scraping/               # Scripts de extracción (Playwright/requests/pytrends)
-
-├── etl/                    # Scripts de staging, calidad y carga al DW
-
+├── scraping/                # Scripts de extracción (Playwright/requests/pytrends)
+├── etl/                     # Scripts de staging, calidad y carga al DW
 ├── database/                # Conexión a PostgreSQL (SQLAlchemy)
-
-├── logs/                   # Logs estructurados del pipeline (NO en Git)
-
+├── logs/                    # Logs estructurados del pipeline (NO en Git)
 ├── dw_turismo_santa_elena.sql  # Schema del Data Warehouse (Star Schema)
-
 ├── requirements.txt
-
-└── .env                     # Variables de entorno (NO en Git)
+└── .env                      # Variables de entorno (NO en Git)
+```
 
 ## Notas sobre cobertura de datos
 
@@ -159,4 +145,4 @@ turismo-santa-elena-bi/
 - **TripAdvisor y Hotels.com** (fuentes originalmente propuestas en E1)
   fueron sustituidas por **KAYAK** y **Hostelworld** por restricciones
   técnicas de acceso (CAPTCHA y renderizado JS asíncrono respectivamente).
-  Justificación completa en Anexo B del Entregable 2.
+  Justificación completa en Anexo del Entregable 2.
