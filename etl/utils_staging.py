@@ -63,19 +63,36 @@ def homologar_destino(destino_raw: str) -> dict:
 
 
 
-def extraer_precio_usd(texto: str):
+def extraer_precio_usd(texto: str) -> float | None:
+    """
+    Extrae un valor numerico de precio desde texto sucio.
+    Ignora explicitamente frases tipo "Pay $0 today" (el monto que se paga
+    HOY en Airbnb, no el precio de la estadia), que antes contaminaba la
+    extraccion al ser el ultimo '$' encontrado en el texto.
+    Si hay multiples montos restantes (precio tachado + precio con
+    descuento), toma el ULTIMO, que suele ser el precio final/actual.
+    """
     if not texto:
         return None
 
-    montos = re.findall(r"\$\s?([\d,.]+)", texto)
+    texto_limpio = re.sub(r"[Pp]ay\s*\$\s?[\d.,]+\s*today", "", texto)
+
+    montos = re.findall(r"\$\s?([\d]{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)", texto_limpio)
     if not montos:
         return None
 
-    try:
-        limpio = montos[-1].replace(",", "")
-        return float(limpio)
-    except:
+    valores = []
+    for m in montos:
+        limpio = m.replace(".", "").replace(",", ".") if ("," in m and "." in m) else m.replace(",", "")
+        try:
+            valores.append(float(limpio))
+        except ValueError:
+            continue
+
+    if not valores:
         return None
+
+    return valores[-1]
 
 
 def precio_total_a_por_noche(precio_total: float, noches: int = 2):
