@@ -83,7 +83,21 @@ def extraer_precio_usd(texto: str) -> float | None:
 
     valores = []
     for m in montos:
-        limpio = m.replace(".", "").replace(",", ".") if ("," in m and "." in m) else m.replace(",", "")
+        import re as _re
+        # Caso 1: punto seguido de exactamente 3 digitos al final
+        # -> separador de miles latinoamericano (ej. "1.170" = 1170)
+        if _re.search(r'\.\d{3}$', m):
+            limpio = m.replace(".", "").replace(",", "")
+        # Caso 2: coma seguida de exactamente 3 digitos al final (sin decimal)
+        # -> separador de miles americano (ej. "1,040" = 1040)
+        elif _re.search(r',\d{3}$', m) and '.' not in m:
+            limpio = m.replace(",", "")
+        # Caso 3: coma Y punto presentes -> formato "1,234.56"
+        elif "," in m and "." in m:
+            limpio = m.replace(",", "")
+        # Caso 4: sin separador de miles
+        else:
+            limpio = m.replace(",", ".")
         try:
             valores.append(float(limpio))
         except ValueError:

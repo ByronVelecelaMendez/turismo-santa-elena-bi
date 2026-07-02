@@ -111,7 +111,9 @@ def main():
                 "destino_slug": destino_info["destino_slug"],
                 "dentro_alcance": destino_info["dentro_alcance"],
                 "nombre_alojamiento": nombre,
-                "precio_noche_usd": extraer_precio_usd(r.get("precio_raw")),
+                "precio_noche_usd": precio_total_a_por_noche(
+                    extraer_precio_usd(r.get("precio_raw")), 2
+                ) if plataforma in ("booking", "airbnb") else extraer_precio_usd(r.get("precio_raw")),
                 "rating_normalizado": normalizar_rating(r.get("rating_raw"), plataforma),
                 "num_resenas": obtener_num_resenas(plataforma, r),
                 "tipo_alojamiento": obtener_tipo_alojamiento(plataforma, r),
