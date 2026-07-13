@@ -86,6 +86,11 @@ st.markdown(
     "- Hostelworld tiene cobertura parcial: no posee listados propios "
     "para Punta Carnero y La Libertad.\n"
     "- La encuesta usa muestra de conveniencia (111 respuestas, no "
-    "probabilística)."
+    "probabilística).\n"
+    "- Se detectó y corrigió un bug de extracción de precio en el "
+    "scraper de Hostelworld: el regex capturaba un valor fijo repetido "
+    "en la plantilla de todas las páginas, no el precio real de cada "
+    "propiedad. Se excluyeron 10 registros de precio afectados "
+    "(rating y reseñas de Hostelworld no se vieron afectados)."
 )
 common.cerrar_seccion()
