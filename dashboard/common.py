@@ -9,6 +9,7 @@ tarjetas KPI con icono).
 import base64
 import os
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 import pandas as pd
@@ -37,6 +38,22 @@ COLORES_DESTINO = {
 # COLORES_DESTINO, para que todo el dashboard se sienta parte de un
 # solo sistema de diseño en vez de mezclar colores sueltos de Plotly.
 PALETA_SECUNDARIA = ["#0B3B70", "#1B6FC9", "#2E8B8B", "#5B7C99", "#8FA6BC", "#C9A227"]
+
+# Colores fijos por plataforma (los mismos en TODOS los gráficos,
+# para que Airbnb/Booking/KAYAK/Hostelworld se lean igual en cada página)
+COLORES_PLATAFORMA = {
+    "Airbnb": "#0B3B70",
+    "Booking": "#1B6FC9",
+    "KAYAK": "#5B7C99",
+    "Hostelworld": "#2E8B8B",
+}
+
+# Escala para valoraciones (semáforo suavizado acorde a la paleta:
+# rojo solo como alerta, verde institucional en el extremo bueno)
+ESCALA_VALORACION = ["#C0392B", "#E8C547", "#1E8E5A"]
+
+# Escala para precios (monocromática de marca: claro = barato)
+ESCALA_PRECIO = ["#DCEAFB", "#0B3B70"]
 
 # Coordenadas oficiales de los 6 destinos (única fuente de verdad —
 # antes estaban duplicadas y desincronizadas entre api/config.py,
@@ -181,10 +198,10 @@ def inject_base_css():
     html, body, .stApp {
         margin: 0 !important;
         padding: 0 !important;
-        background: #EBF1F9 !important;
+        background: #F4F6F8 !important;
     }
     div[data-testid="stAppViewContainer"] {
-        background: #EBF1F9 !important;
+        background: #F4F6F8 !important;
         padding-top: 0 !important;
     }
     div[data-testid="stMainBlockContainer"] {
@@ -198,6 +215,18 @@ def inject_base_css():
     iframe {
         display: block;
     }
+    
+                div[data-testid="stImage"] {
+        margin-bottom: 0 !important;
+    }
+        div[data-testid="stImage"] img {
+        border-radius: 14px;
+        border: 1px solid #D8E2EF;
+        box-shadow:
+            0 3px 8px rgba(11,59,112,.08),
+            0 10px 24px rgba(11,59,112,.10);
+    }         
+                
     /* Oculta la barra superior nativa de Streamlit (Deploy, menu, la
        franja de color decorativa) y elimina TODO el espacio reservado
        arriba del contenido. Se usan varios selectores porque Streamlit
@@ -209,13 +238,14 @@ def inject_base_css():
     footer { display: none !important; }
 
     .main .block-container{
-        padding-top: 0.25rem !important;
-        padding-left: 2.6rem;
-        padding-right: 2.6rem;
-        max-width: 1400px;
-    }
+    padding-top:0.1rem !important;
+    padding-left:2.2rem;
+    padding-right:2.2rem;
+    max-width:1280px;
+}
+                
     div[data-testid="stVerticalBlock"] > div[data-testid="stElementContainer"] {
-        margin-bottom: 0.1rem;
+    margin-bottom: 0 !important;
     }
 
     /* ============================================================
@@ -253,10 +283,10 @@ def inject_base_css():
        BARRA DE NAVEGACIÓN HORIZONTAL (solo página de Inicio)
        ============================================================ */
     .st-key-nav_cards {
-        background: linear-gradient(135deg, #0B3B70 0%, #123F78 50%, #1B6FC9 100%);
-        border-radius: 14px;
+        background: linear-gradient(135deg, #123F78 0%, #1B5FA8 50%, #2F7FD1 100%);
+        border-radius: 18px;
         padding: 8px 10px;
-        box-shadow: 0 6px 20px rgba(11, 59, 112, 0.30);
+        box-shadow: 0 6px 20px rgba(11, 59, 112, 0.24);
         position: relative;
         overflow: hidden;
     }
@@ -275,13 +305,13 @@ def inject_base_css():
     .st-key-nav_cards div[data-testid="stPageLink"] a {
         width: 100%;
         min-height: 58px;
-        border-radius: 10px;
+        border-radius: 13px;
         border: 1px solid rgba(255, 255, 255, 0.10) !important;
         background: rgba(255, 255, 255, 0.06) !important;
         color: #EAF3FF !important;
         text-decoration: none !important;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-        transition: all 0.18s ease-in-out;
+        transition: all 0.22s ease-in-out;
         padding: 8px 10px;
         display: flex !important;
         flex-direction: row !important;
@@ -291,10 +321,10 @@ def inject_base_css():
         border-bottom: 3px solid transparent;
     }
     .st-key-nav_cards div[data-testid="stPageLink"] a:hover {
-        background: rgba(255, 255, 255, 0.16) !important;
-        border-bottom: 3px solid #4A9FD8;
-        border-color: rgba(255, 255, 255, 0.22) !important;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+        background: rgba(255, 255, 255, 0.13) !important;
+        border-bottom: 3px solid #8FD1F5;
+        border-color: rgba(255, 255, 255, 0.18) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 8px rgba(0, 0, 0, 0.10) !important;
     }
     .st-key-nav_cards div[data-testid="stPageLink"] a [data-testid="stIconMaterial"] {
         font-size: 19px !important;
@@ -379,11 +409,10 @@ def inject_base_css():
         display: flex;
         gap: 12px;
         background: #FFFFFF;
-        border-radius: 14px;
-        padding: 14px 16px;
-        border: 1px solid #D8E2EF;
-        border-top: 3px solid #0B3B70;
-        box-shadow: 0 4px 16px rgba(11, 59, 112, 0.10);
+        border-radius: 18px;
+        padding: 16px 18px;
+        border: none;
+        box-shadow: 0 8px 24px rgba(11, 59, 112, 0.12), 0 2px 6px rgba(11, 59, 112, 0.06);
         margin-bottom: 4px;
     }
     .kpi-item {
@@ -394,14 +423,14 @@ def inject_base_css():
         padding: 0 10px;
     }
     .kpi-item + .kpi-item {
-        border-left: 1px solid #E7EDF5;
+        border-left: 1px solid #EDF1F6;
     }
     .kpi-icono {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #0B3B70, #1B6FC9);
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #123F78, #2F7FD1);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -411,18 +440,18 @@ def inject_base_css():
     }
     .kpi-texto { min-width: 0; }
     .kpi-etiqueta {
-        color: #5A7089;
-        font-size: 11px;
-        font-weight: 700;
+        color: #7A8CA0;
+        font-size: 12.5px;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.4px;
         white-space: nowrap;
     }
     .kpi-valor {
-        color: #0B2E52;
-        font-size: 22px;
+        color: #16233A;
+        font-size: 24px;
         font-weight: 800;
-        line-height: 1.25;
+        line-height: 1.3;
         white-space: nowrap;
     }
     .kpi-delta {
@@ -470,26 +499,31 @@ def inject_base_css():
         box-shadow: 0 3px 10px rgba(11, 59, 112, 0.08);
     }
 
-    /* Barra de título para secciones de gráficos */
+    /* ============================================================
+       TARJETAS DE SECCIÓN (contenedor real con key sec_*)
+       El gráfico queda DENTRO de la tarjeta blanca, junto con su
+       barra de título azul.
+       ============================================================ */
+    div[class*="st-key-sec_"] {
+        background: #FFFFFF;
+        border: 1px solid #D8E2EF;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(11, 59, 112, 0.09);
+        padding: 0 14px 14px 14px;
+        margin-bottom: 14px;
+    }
+    div[class*="st-key-sec_"] .barra-seccion {
+        margin: 0 -14px 10px -14px;
+    }
     .barra-seccion {
         background: linear-gradient(90deg, #0B3B70 0%, #1B6FC9 100%);
-        border-radius: 10px 10px 0 0;
+        border-radius: 12px 12px 0 0;
         padding: 9px 16px;
         font-weight: 700;
         color: #FFFFFF;
         font-size: 12.5px;
         letter-spacing: 0.5px;
         text-transform: uppercase;
-        margin-bottom: 0;
-    }
-    .caja-seccion {
-        border: 1px solid #D8E2EF;
-        border-top: none;
-        border-radius: 0 0 10px 10px;
-        padding: 10px 14px 12px 14px;
-        margin-bottom: 10px;
-        background: #FFFFFF;
-        box-shadow: 0 4px 16px rgba(11, 59, 112, 0.09);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -503,7 +537,7 @@ def render_banner():
     hay_banner = os.path.exists(str(BASE_DIR / "assets" / "banner.png"))
     if hay_banner:
         st.markdown(
-            "<div style='max-width:1100px; margin:0 auto;'>",
+             "<div style='max-width:1280px; margin:0 auto;'>",
             unsafe_allow_html=True,
         )
         imagen_segura(BASE_DIR / "assets" / "banner.png", use_container_width=True)
@@ -524,7 +558,8 @@ def render_banner():
             </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-bottom:6px;'></div>", unsafe_allow_html=True)
+    
 
 
 def render_banner_sin_foto():
@@ -609,7 +644,7 @@ ICONOS_NAV = {
     "Resumen General": "bar_chart",
     "Análisis de Precios": "payments",
     "Valoraciones por Plataforma": "star",
-    "Encuesta Propia": "assignment",
+    "Encuesta Propia": "donut_large",
     "Datos y Fuentes": "database",
 }
 
@@ -625,10 +660,10 @@ def render_nav():
                     ruta,
                     label=titulo,
                     icon=f":material/{icono}:",
-                    use_container_width=True,
+                    width="stretch",
                 )
 
-    st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:0px;'></div>", unsafe_allow_html=True)
 
 
 # ============================================================
@@ -670,7 +705,7 @@ def render_encabezado_compacto(pagina_activa: str = ""):
                     with col:
                         with st.container(key=slug):
                             etiqueta = NAV_LABELS_CORTOS.get(titulo, titulo)
-                            st.page_link(ruta, label=etiqueta, use_container_width=True)
+                            st.page_link(ruta, label=etiqueta, width="stretch")
                     if titulo == pagina_activa:
                         slugs_activos.append(slug)
 
@@ -778,8 +813,14 @@ def render_kpis(items):
 def estilo_grafico(fig):
     """Aplica estilo visual consistente (tipografía, fondo transparente,
     cuadrícula suave, tooltips en la paleta de marca) a cualquier figura
-    de Plotly del dashboard. Llamar justo antes de st.plotly_chart()."""
+    de Plotly del dashboard. Llamar justo antes de st.plotly_chart().
+
+    Nota: title_text="" elimina el título interno de Plotly (que salía
+    como "undefined" cuando no estaba definido) — el título de cada
+    gráfico lo lleva la barra azul de su tarjeta de sección."""
     fig.update_layout(
+        title_text="",
+        margin=dict(l=10, r=10, t=30, b=10),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family="Segoe UI, Arial, sans-serif", color="#1A2E44", size=12),
@@ -810,15 +851,41 @@ def estilo_grafico(fig):
     return fig
 
 
+# ============================================================
+# TARJETAS DE SECCIÓN
+# ============================================================
+
+@contextmanager
+def seccion(titulo: str, key: str):
+    """Tarjeta de sección real: barra de título azul + contenido DENTRO
+    de la misma tarjeta blanca. Reemplaza a render_seccion/cerrar_seccion,
+    que no funcionaban porque Streamlit auto-cierra el HTML de cada
+    st.markdown y el gráfico quedaba fuera del div (por eso se veían
+    cajas blancas vacías bajo cada barra de título).
+
+    Uso:
+        with common.seccion("PRECIO PROMEDIO POR DESTINO", "precio_destino"):
+            st.plotly_chart(fig, width="stretch")
+
+    key debe ser único dentro de cada página (sin espacios ni tildes).
+    """
+    with st.container(key=f"sec_{key}"):
+        st.markdown(f'<div class="barra-seccion">{titulo}</div>',
+                    unsafe_allow_html=True)
+        yield
+
+
 def render_seccion(titulo: str):
-    """Dibuja la barra de título tipo tarjeta usada para encabezar cada
-    sección de gráfico. Debe cerrarse con cerrar_seccion()."""
-    st.markdown(f'<div class="barra-seccion">{titulo}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="caja-seccion">', unsafe_allow_html=True)
+    """OBSOLETA — usar `with common.seccion(titulo, key):` en su lugar.
+    Se mantiene para que las páginas no migradas no se rompan mientras
+    tanto: dibuja solo la cinta de título (sin caja rota debajo)."""
+    st.markdown(f'<div class="barra-seccion" style="border-radius:10px;">{titulo}</div>',
+                unsafe_allow_html=True)
 
 
 def cerrar_seccion():
-    st.markdown('</div>', unsafe_allow_html=True)
+    """OBSOLETA — ya no hace nada. Usar `with common.seccion(...)`."""
+    pass
 
 
 # ============================================================
