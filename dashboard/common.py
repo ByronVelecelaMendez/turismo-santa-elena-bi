@@ -199,18 +199,32 @@ def inject_base_css():
         margin: 0 !important;
         padding: 0 !important;
         background: #F4F6F8 !important;
+        height: auto !important;
+        min-height: 0 !important;
     }
     div[data-testid="stAppViewContainer"] {
         background: #F4F6F8 !important;
         padding-top: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+    div[data-testid="stMain"] {
+        height: auto !important;
+        min-height: 0 !important;
     }
     div[data-testid="stMainBlockContainer"] {
         padding-top: 0.45rem !important;
+        padding-bottom: 0.6rem !important;
         background: transparent !important;
+        height: auto !important;
+        min-height: 0 !important;
     }
     div[data-testid="stAppViewBlockContainer"] {
         padding-top: 0.45rem !important;
+        padding-bottom: 0.6rem !important;
         background: transparent !important;
+        height: auto !important;
+        min-height: 0 !important;
     }
     iframe {
         display: block;
@@ -219,13 +233,10 @@ def inject_base_css():
                 div[data-testid="stImage"] {
         margin-bottom: 0 !important;
     }
-        div[data-testid="stImage"] img {
-        border-radius: 14px;
-        border: 1px solid #D8E2EF;
-        box-shadow:
-            0 3px 8px rgba(11,59,112,.08),
-            0 10px 24px rgba(11,59,112,.10);
-    }         
+    div[data-testid="stImage"] img {
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(11, 59, 112, 0.14);
+    }
                 
     /* Oculta la barra superior nativa de Streamlit (Deploy, menu, la
        franja de color decorativa) y elimina TODO el espacio reservado
@@ -238,14 +249,13 @@ def inject_base_css():
     footer { display: none !important; }
 
     .main .block-container{
-    padding-top:0.1rem !important;
-    padding-left:2.2rem;
-    padding-right:2.2rem;
-    max-width:1280px;
-}
-                
+        padding-top: 0.1rem !important;
+        padding-left: 2.6rem;
+        padding-right: 2.6rem;
+        max-width: 1400px;
+    }
     div[data-testid="stVerticalBlock"] > div[data-testid="stElementContainer"] {
-    margin-bottom: 0 !important;
+        margin-bottom: 0 !important;
     }
 
     /* ============================================================
@@ -413,7 +423,7 @@ def inject_base_css():
         padding: 16px 18px;
         border: none;
         box-shadow: 0 8px 24px rgba(11, 59, 112, 0.12), 0 2px 6px rgba(11, 59, 112, 0.06);
-        margin-bottom: 4px;
+        margin-bottom: 0;
     }
     .kpi-item {
         flex: 1;
@@ -537,7 +547,7 @@ def render_banner():
     hay_banner = os.path.exists(str(BASE_DIR / "assets" / "banner.png"))
     if hay_banner:
         st.markdown(
-             "<div style='max-width:1280px; margin:0 auto;'>",
+            "<div style='max-width:1100px; margin:0 auto;'>",
             unsafe_allow_html=True,
         )
         imagen_segura(BASE_DIR / "assets" / "banner.png", use_container_width=True)
@@ -558,8 +568,7 @@ def render_banner():
             </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("<div style='margin-bottom:6px;'></div>", unsafe_allow_html=True)
-    
+    st.markdown("<div style='height:0px;'></div>", unsafe_allow_html=True)
 
 
 def render_banner_sin_foto():
