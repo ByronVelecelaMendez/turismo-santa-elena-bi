@@ -90,7 +90,7 @@ with col_b:
                 "total_publicaciones": True,
                 "lat": False, "lon": False
             },
-            color_continuous_scale="YlOrRd",
+            color_continuous_scale="Blues",
             size_max=28,
             mapbox_style="carto-positron",
             labels={"precio_promedio_noche_usd": "Precio (USD)"},
@@ -111,7 +111,7 @@ with col_b:
             use_container_width=True,
             config={"displayModeBar": False, "scrollZoom": False},
         )
-    st.caption("Color = precio promedio por noche (amarillo: más bajo, rojo: más alto).")
+    st.caption("Color = precio promedio por noche (azul claro: más bajo, azul oscuro: más alto).")
     common.cerrar_seccion()
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -136,6 +136,7 @@ with col_c:
             x="tipo_alojamiento",
             y="precio_noche_usd",
             color="tipo_alojamiento",
+            color_discrete_sequence=common.PALETA_SECUNDARIA,
             labels={"precio_noche_usd": "Precio/noche (USD)", "tipo_alojamiento": "Tipo de alojamiento"},
             height=380
         )
@@ -151,6 +152,7 @@ with col_d:
         x="nombre_destino",
         y="precio_noche_usd",
         color="nombre_plataforma",
+        color_discrete_sequence=common.PALETA_SECUNDARIA,
         barmode="group",
         labels={"precio_noche_usd": "Precio promedio (USD)", "nombre_destino": "Destino", "nombre_plataforma": "Plataforma"},
         height=380

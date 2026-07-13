@@ -18,15 +18,24 @@ from database.conexion import get_engine
 
 BASE_DIR = Path(__file__).parent
 
-# Colores oficiales del proyecto
+# Paleta profesional por destino — variaciones de azul/gris/teal
+# derivadas del azul institucional (#0B3B70), en vez de colores
+# genéricos tipo Excel. El rojo se reserva exclusivamente para alertas
+# (ver render_seccion / cajas de insight), así no compite visualmente.
 COLORES_DESTINO = {
-    "Salinas": "#1f77b4",
-    "Montañita": "#2ca02c",
-    "Ayangue": "#ff7f0e",
-    "La Libertad": "#9467bd",
-    "Manglaralto": "#8c564b",
-    "Punta Carnero": "#e377c2",
+    "Salinas": "#0B3B70",
+    "Montañita": "#1B6FC9",
+    "Ayangue": "#4A9FD8",
+    "La Libertad": "#5B7C99",
+    "Manglaralto": "#8FA6BC",
+    "Punta Carnero": "#2E8B8B",
 }
+
+# Paleta secundaria para series que NO representan un destino
+# (plataforma, tipo de alojamiento, etc.) — misma familia visual que
+# COLORES_DESTINO, para que todo el dashboard se sienta parte de un
+# solo sistema de diseño en vez de mezclar colores sueltos de Plotly.
+PALETA_SECUNDARIA = ["#0B3B70", "#1B6FC9", "#2E8B8B", "#5B7C99", "#8FA6BC", "#C9A227"]
 
 # Coordenadas oficiales de los 6 destinos (única fuente de verdad —
 # antes estaban duplicadas y desincronizadas entre api/config.py,
@@ -246,50 +255,59 @@ def inject_base_css():
     }
 
     /* ============================================================
-       TARJETAS GRANDES DE NAVEGACIÓN (solo página de Inicio)
-       Degradado azul a juego con el banner institucional.
+       BARRA DE NAVEGACIÓN HORIZONTAL (solo página de Inicio)
+       Franja continua azul zafiro — sin tarjetas separadas ni
+       cápsulas, tipografía refinada tipo tab bar corporativo.
        ============================================================ */
+    .st-key-nav_cards {
+        background: #0B3B70;
+        border-radius: 14px;
+        padding: 6px 10px;
+        box-shadow: 0 4px 14px rgba(11, 59, 112, 0.22);
+    }
     .st-key-nav_cards div[data-testid="stPageLink"] {
         width: 100%;
     }
     .st-key-nav_cards div[data-testid="stPageLink"] a {
         width: 100%;
-        min-height: 130px;
-        border-radius: 16px;
+        min-height: 58px;
+        border-radius: 8px;
         border: none !important;
-        background: linear-gradient(180deg, #EAF3FF 0%, #D3E6FB 100%);
-        color: #0B3B70 !important;
+        background: transparent !important;
+        color: #EAF3FF !important;
         text-decoration: none !important;
-        box-shadow: 0 2px 10px rgba(11, 59, 112, 0.10);
-        transition: all 0.2s ease-in-out;
-        padding: 18px 12px;
+        box-shadow: none !important;
+        transition: all 0.18s ease-in-out;
+        padding: 8px 10px;
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: row !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 10px;
+        gap: 9px;
+        border-bottom: 3px solid transparent;
     }
     .st-key-nav_cards div[data-testid="stPageLink"] a:hover {
-        background: linear-gradient(180deg, #DCEBFC 0%, #BFDCF7 100%);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(11, 59, 112, 0.20);
-        border: none !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-bottom: 3px solid #4A9FD8;
+        box-shadow: none !important;
     }
     .st-key-nav_cards div[data-testid="stPageLink"] a [data-testid="stIconMaterial"] {
-        font-size: 30px !important;
-        color: #0B3B70 !important;
+        font-size: 19px !important;
+        color: #9FC6EE !important;
         line-height: 1;
     }
     .st-key-nav_cards div[data-testid="stPageLink"] a p {
         margin: 0 !important;
-        color: #0B3B70 !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
+        color: #EAF3FF !important;
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
         text-align: center;
         text-transform: uppercase;
-        letter-spacing: 0.3px;
-        line-height: 1.25;
-        white-space: normal;
+        letter-spacing: 0.9px;
+        white-space: nowrap;
+    }
+    .st-key-nav_cards div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"]:not(:last-child) {
+        border-right: 1px solid rgba(255, 255, 255, 0.14);
     }
 
     /* Tarjetas de navegación reales (st.page_link), estilo profesional
@@ -346,6 +364,7 @@ def inject_base_css():
         border-radius: 14px;
         padding: 6px 10px;
         border: 1px solid #E3ECF7;
+        border-top: 3px solid #0B3B70;
         box-shadow: 0 2px 10px rgba(11, 59, 112, 0.05);
     }
     /* Encabezado compacto de páginas internas (nav en formato pestaña delgada) */
@@ -438,6 +457,134 @@ def render_banner():
     st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
 
 
+def render_banner_sin_foto():
+    """Banner alternativo 100% generado en CSS/HTML, sin foto de stock
+    (evita el texto ilegible tipo 'Prcie diztribution' que trae la
+    imagen decorativa de personas). Barra superior institucional +
+    hero en degradado zafiro, con jerarquía tipográfica marcada en vez
+    de una cápsula/badge para el texto de contexto."""
+    hay_logo = os.path.exists(str(BASE_DIR / "assets" / "logo_upse.png"))
+
+    st.markdown(
+        """
+        <style>
+        .hero-banner {
+            max-width: 1100px;
+            margin: 0 auto;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #0B3B70 0%, #123F78 45%, #1B6FC9 100%);
+            box-shadow: 0 10px 30px rgba(11, 59, 112, 0.28);
+        }
+        .hero-banner::after {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+        }
+        .hero-topbar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 14px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            position: relative;
+            z-index: 2;
+        }
+        .hero-topbar-text {
+            line-height: 1.25;
+        }
+        .hero-topbar-text .titulo {
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.2px;
+        }
+        .hero-topbar-text .subtitulo {
+            color: #A9C7E8;
+            font-weight: 500;
+            font-size: 11.5px;
+            letter-spacing: 0.6px;
+        }
+        .hero-main {
+            padding: 40px 44px 48px 44px;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-eyebrow {
+            color: #8FC3F0;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+        }
+        .hero-title {
+            color: #FFFFFF !important;
+            font-size: 46px !important;
+            font-weight: 800 !important;
+            margin: 12px 0 4px 0 !important;
+            padding: 0 !important;
+            line-height: 1.12 !important;
+            letter-spacing: -0.3px;
+        }
+        .hero-title .accent {
+            color: #7EC1F2 !important;
+            font-weight: 300 !important;
+        }
+        .hero-sub {
+            color: #C9DEF5;
+            font-size: 15px;
+            font-weight: 400;
+            margin-top: 10px;
+            letter-spacing: 0.2px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    logo_html = ""
+    if hay_logo:
+        import base64
+        with open(BASE_DIR / "assets" / "logo_upse.png", "rb") as f:
+            logo_b64 = base64.b64encode(f.read()).decode()
+        logo_html = f"<img src='data:image/png;base64,{logo_b64}' style='width:38px;height:38px;object-fit:contain;'/>"
+
+    st.markdown(
+        f"""
+        <div class="hero-banner">
+            <div class="hero-topbar">
+                {logo_html}
+                <div class="hero-topbar-text">
+                    <div class="titulo">BI TURISMO SANTA ELENA</div>
+                    <div class="subtitulo">PROYECTO INTEGRADOR &middot; UPSE 2026-1</div>
+                </div>
+            </div>
+            <div class="hero-main">
+                <div class="hero-eyebrow">Panel de control BI de</div>
+                <h1 class="hero-title">
+                    Hospedaje y Turismo<br>
+                    <span class="accent">en Santa Elena</span>
+                </h1>
+                <p class="hero-sub">
+                    Plataforma de Inteligencia de Negocios para el sector turístico
+                    de la provincia de Santa Elena, Ecuador
+                </p>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
+
+
 # ============================================================
 # NAVEGACIÓN CON TARJETAS = PÁGINAS REALES (st.page_link)
 # ============================================================
@@ -452,10 +599,11 @@ ICONOS_NAV = {
 
 
 def render_nav():
-    """Fila de tarjetas de navegación GRANDES (solo para la página de
-    Inicio, replica la Imagen 1). Cada una es un st.page_link real:
-    al hacer clic, Streamlit navega a una URL propia (p. ej.
-    /Resumen_General), no solo cambia contenido en la misma página."""
+    """Barra de navegación horizontal continua (solo página de Inicio):
+    franja azul zafiro con 5 tabs, sin tarjetas separadas. Cada una es
+    un st.page_link real: al hacer clic, Streamlit navega a una URL
+    propia (p. ej. /Resumen_General), no solo cambia contenido en la
+    misma página."""
     with st.container(key="nav_cards"):
         cols_nav = st.columns(len(PAGINAS) - 1)  # todas menos "Inicio"
         for col, (titulo, ruta) in zip(cols_nav, PAGINAS[1:]):

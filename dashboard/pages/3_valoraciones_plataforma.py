@@ -51,6 +51,7 @@ with col_a:
         x="nombre_plataforma",
         y="valoracion_promedio",
         color="nombre_plataforma",
+        color_discrete_sequence=common.PALETA_SECUNDARIA,
         text="valoracion_promedio",
         labels={"valoracion_promedio": "Valoración promedio", "nombre_plataforma": "Plataforma"},
         height=300

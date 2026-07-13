@@ -101,7 +101,7 @@ else:
                 temp.columns = ["temporada", "cantidad"]
                 fig2 = px.pie(
                     temp, values="cantidad", names="temporada", height=350,
-                    color_discrete_sequence=px.colors.qualitative.Set2
+                    color_discrete_sequence=common.PALETA_SECUNDARIA
                 )
                 fig2.update_traces(textposition="inside", textinfo="percent+label")
                 st.plotly_chart(fig2, use_container_width=True)
@@ -141,7 +141,7 @@ else:
                 fig3 = px.bar(
                     df_brecha, x="Fuente", y="Precio USD/noche", color="Fuente",
                     text="Precio USD/noche",
-                    color_discrete_sequence=["#2ca02c", "#1f77b4"], height=350,
+                    color_discrete_sequence=["#8FA6BC", "#0B3B70"], height=350,
                     labels={"Precio USD/noche": "Precio promedio (USD/noche)"}
                 )
                 fig3.update_traces(texttemplate="$%{text:.2f}", textposition="outside")
@@ -178,7 +178,7 @@ else:
                 plats.columns = ["plataforma", "cantidad"]
                 fig4 = px.pie(
                     plats, values="cantidad", names="plataforma", height=350,
-                    color_discrete_sequence=px.colors.qualitative.Pastel
+                    color_discrete_sequence=common.PALETA_SECUNDARIA
                 )
                 fig4.update_traces(textposition="inside", textinfo="percent+label")
                 st.plotly_chart(fig4, use_container_width=True)
@@ -193,6 +193,7 @@ else:
                 tipos.columns = ["tipo", "cantidad"]
                 fig5 = px.bar(
                     tipos, x="tipo", y="cantidad", color="tipo", text="cantidad",
+                    color_discrete_sequence=common.PALETA_SECUNDARIA,
                     height=350, labels={"cantidad": "Respuestas", "tipo": "Tipo de alojamiento"}
                 )
                 fig5.update_traces(textposition="outside")
