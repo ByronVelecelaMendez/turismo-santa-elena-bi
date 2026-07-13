@@ -68,11 +68,11 @@ else:
             positivos = serie.str.contains("sí", na=False).sum()
             recomienda_txt = f"{(positivos / respuestas_totales) * 100:.1f}%"
 
-        with st.container(border=True, key="caja_kpis"):
-            col1, col2, col3 = st.columns(3)
-            col1.metric("Respuestas recolectadas", f"{respuestas_totales}")
-            col2.metric("Rating precio-calidad (encuesta)", rating_calidad_txt)
-            col3.metric("Recomendarían visitar", recomienda_txt)
+        common.render_kpis([
+            {"icono": "assignment_turned_in", "etiqueta": "Respuestas recolectadas", "valor": f"{respuestas_totales}"},
+            {"icono": "star", "etiqueta": "Rating precio-calidad (encuesta)", "valor": rating_calidad_txt},
+            {"icono": "thumb_up", "etiqueta": "Recomendarían visitar", "valor": recomienda_txt},
+        ])
 
         st.divider()
 
@@ -86,9 +86,10 @@ else:
                 fig = px.bar(
                     mejoras, x="cantidad", y="aspecto", orientation="h",
                     color="cantidad", color_continuous_scale="Reds",
-                    labels={"cantidad": "Respuestas", "aspecto": "Aspecto"}, height=350
+                    labels={"cantidad": "Respuestas", "aspecto": "Aspecto"}, height=370
                 )
                 fig.update_layout(showlegend=False, coloraxis_showscale=False)
+                fig = common.estilo_grafico(fig)
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.info("No se encontró la columna de 'aspecto a mejorar' en fact_encuesta.")
@@ -100,10 +101,11 @@ else:
                 temp = df_enc[col_temporada].value_counts().reset_index()
                 temp.columns = ["temporada", "cantidad"]
                 fig2 = px.pie(
-                    temp, values="cantidad", names="temporada", height=350,
+                    temp, values="cantidad", names="temporada", height=370,
                     color_discrete_sequence=common.PALETA_SECUNDARIA
                 )
                 fig2.update_traces(textposition="inside", textinfo="percent+label")
+                fig2 = common.estilo_grafico(fig2)
                 st.plotly_chart(fig2, use_container_width=True)
             else:
                 st.info("No se encontró la columna de 'temporada preferida' en fact_encuesta.")
@@ -141,12 +143,13 @@ else:
                 fig3 = px.bar(
                     df_brecha, x="Fuente", y="Precio USD/noche", color="Fuente",
                     text="Precio USD/noche",
-                    color_discrete_sequence=["#8FA6BC", "#0B3B70"], height=350,
+                    color_discrete_sequence=["#8FA6BC", "#0B3B70"], height=370,
                     labels={"Precio USD/noche": "Precio promedio (USD/noche)"}
                 )
                 fig3.update_traces(texttemplate="$%{text:.2f}", textposition="outside")
                 fig3.update_layout(showlegend=False,
                                    yaxis_range=[0, max(precio_real_promedio, precio_enc_promedio) * 1.3])
+                fig3 = common.estilo_grafico(fig3)
                 st.plotly_chart(fig3, use_container_width=True)
 
                 brecha = precio_real_promedio - precio_enc_promedio
@@ -177,10 +180,11 @@ else:
                 plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                 plats.columns = ["plataforma", "cantidad"]
                 fig4 = px.pie(
-                    plats, values="cantidad", names="plataforma", height=350,
+                    plats, values="cantidad", names="plataforma", height=370,
                     color_discrete_sequence=common.PALETA_SECUNDARIA
                 )
                 fig4.update_traces(textposition="inside", textinfo="percent+label")
+                fig4 = common.estilo_grafico(fig4)
                 st.plotly_chart(fig4, use_container_width=True)
             else:
                 st.info("No se encontró la columna de 'plataforma de reserva' en fact_encuesta.")
@@ -194,10 +198,11 @@ else:
                 fig5 = px.bar(
                     tipos, x="tipo", y="cantidad", color="tipo", text="cantidad",
                     color_discrete_sequence=common.PALETA_SECUNDARIA,
-                    height=350, labels={"cantidad": "Respuestas", "tipo": "Tipo de alojamiento"}
+                    height=370, labels={"cantidad": "Respuestas", "tipo": "Tipo de alojamiento"}
                 )
                 fig5.update_traces(textposition="outside")
                 fig5.update_layout(showlegend=False)
+                fig5 = common.estilo_grafico(fig5)
                 st.plotly_chart(fig5, use_container_width=True)
             else:
                 st.info("No se encontró la columna de 'tipo de alojamiento preferido' en fact_encuesta.")

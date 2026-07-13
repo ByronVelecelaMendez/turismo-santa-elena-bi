@@ -18,11 +18,17 @@ if filtro_destino != "Todos":
 if filtro_plataforma != "Todas":
     df_fact = df_fact[df_fact["nombre_plataforma"] == filtro_plataforma]
 
-with st.container(border=True, key="caja_kpis"):
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Precio mínimo", f"${df_fact['precio_noche_usd'].min():.2f}")
-    col2.metric("Precio promedio", f"${df_fact['precio_noche_usd'].mean():.2f}")
-    col3.metric("Precio máximo", f"${df_fact['precio_noche_usd'].max():.2f}")
+if df_fact["precio_noche_usd"].dropna().empty:
+    st.info(
+        "No hay publicaciones con precio disponibles para esta combinación "
+        "de filtros (Destino / Plataforma). Prueba con otra combinación."
+    )
+else:
+    common.render_kpis([
+        {"icono": "arrow_downward", "etiqueta": "Precio mínimo", "valor": f"${df_fact['precio_noche_usd'].min():.2f}"},
+        {"icono": "payments", "etiqueta": "Precio promedio", "valor": f"${df_fact['precio_noche_usd'].mean():.2f}"},
+        {"icono": "arrow_upward", "etiqueta": "Precio máximo", "valor": f"${df_fact['precio_noche_usd'].max():.2f}"},
+    ])
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -42,7 +48,8 @@ with col_a:
         labels={"precio_noche_usd": "Precio/noche (USD)", "nombre_destino": "Destino"},
         points="outliers"
     )
-    fig.update_layout(showlegend=False, height=380)
+    fig.update_layout(showlegend=False, height=400)
+    fig = common.estilo_grafico(fig)
     st.plotly_chart(fig, use_container_width=True)
     common.cerrar_seccion()
 
@@ -106,6 +113,7 @@ with col_b:
                 center=dict(lat=lat_centro, lon=lon_centro),
             ),
         )
+        fig_mapa = common.estilo_grafico(fig_mapa)
         st.plotly_chart(
             fig_mapa,
             use_container_width=True,
@@ -138,9 +146,10 @@ with col_c:
             color="tipo_alojamiento",
             color_discrete_sequence=common.PALETA_SECUNDARIA,
             labels={"precio_noche_usd": "Precio/noche (USD)", "tipo_alojamiento": "Tipo de alojamiento"},
-            height=380
+            height=400
         )
         fig3.update_layout(showlegend=False)
+        fig3 = common.estilo_grafico(fig3)
         st.plotly_chart(fig3, use_container_width=True)
     common.cerrar_seccion()
 
@@ -155,7 +164,8 @@ with col_d:
         color_discrete_sequence=common.PALETA_SECUNDARIA,
         barmode="group",
         labels={"precio_noche_usd": "Precio promedio (USD)", "nombre_destino": "Destino", "nombre_plataforma": "Plataforma"},
-        height=380
+        height=400
     )
+    fig2 = common.estilo_grafico(fig2)
     st.plotly_chart(fig2, use_container_width=True)
     common.cerrar_seccion()

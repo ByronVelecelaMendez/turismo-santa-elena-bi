@@ -13,41 +13,31 @@ DESTINOS = {
     "la_libertad": "https://www.hostelworld.com/es/albergues/america-del-sur/ecuador/la-libertad-ecuador/"
 }
 
-def extraer_detalle(browser, url_detalle):
 
-    context = browser.new_context()
-    page = context.new_page()
+def extraer_precio_tarjeta(tarjeta):
+    """Lee los bloques de precio de la tarjeta por su etiqueta real
+    ("Dormitorios desde" / "Privadas desde"), en vez de adivinar
+    posiciones en el texto completo de la página (bug anterior: el
+    scraper agarraba un precio fijo de plantilla repetido en todas las
+    páginas). Prioriza precio de dormitorio (comparable entre hostales);
+    si el hostal no tiene dormitorio disponible, usa el de privada."""
+    precio_dormitorio = None
+    precio_privada = None
 
-    precio_raw = None
-    rating_raw = None
-    numero_resenas = None
+    bloques_precio = tarjeta.query_selector_all(".property-accommodation-price")
+    for bloque in bloques_precio:
+        etiqueta_el = bloque.query_selector(".accommodation-label")
+        valor_el = bloque.query_selector("strong.current")
+        if not etiqueta_el or not valor_el:
+            continue
+        etiqueta = etiqueta_el.inner_text().strip().lower()
+        valor = valor_el.inner_text().strip()
+        if "dormitorio" in etiqueta:
+            precio_dormitorio = valor
+        elif "privada" in etiqueta:
+            precio_privada = valor
 
-    try:
-
-        page.goto(url_detalle, timeout=60000)
-        page.wait_for_timeout(3000)
-
-        texto = page.locator("body").inner_text()
-
-        rating = re.search(r"\b\d+\.\d+\b", texto)
-        if rating:
-            rating_raw = rating.group()
-
-        resenas = re.search(r"\((\d+)\)", texto)
-        if resenas:
-            numero_resenas = resenas.group(1)
-
-        precios = re.findall(r"US\$\d+\.\d+", texto)
-        if precios:
-            precio_raw = precios[0]
-
-    except Exception as e:
-        print("Error en alojamiento:", e)
-
-    finally:
-        context.close()
-
-    return precio_raw, rating_raw, numero_resenas
+    return precio_dormitorio or precio_privada
 
 
 def scrape_hostelworld(browser, destino, url):
@@ -67,46 +57,43 @@ def scrape_hostelworld(browser, destino, url):
         print("Título:", page.title())
         print("URL:", page.url)
 
-        enlaces = page.query_selector_all('a[href*="/p/"]')
+        tarjetas = page.query_selector_all("a.property-card-container")
+        nombres_vistos = set()
 
-        urls_vistas = set()
-
-        for enlace in enlaces:
-
-            href = enlace.get_attribute("href")
-
-            if not href:
-                continue
-
-            if href.startswith("http"):
-                url_detalle = href
-            else:
-                url_detalle = "https://www.hostelworld.com" + href
-
-            if url_detalle in urls_vistas:
-                continue
-
-            urls_vistas.add(url_detalle)
+        for tarjeta in tarjetas:
 
             try:
+                nombre_el = tarjeta.query_selector(".property-name span")
+                nombre = nombre_el.inner_text().strip() if nombre_el else None
 
-                texto = enlace.inner_text()
+                if nombre and nombre in nombres_vistos:
+                    continue
 
-                lineas = [
-                    linea.strip()
-                    for linea in texto.split("\n")
-                    if linea.strip()
-                ]
+                rating_el = tarjeta.query_selector(".property-rating .score")
+                rating_raw = rating_el.inner_text().strip() if rating_el else None
 
-                nombre = None
+                numero_resenas = None
+                resenas_el = tarjeta.query_selector(".property-rating .num-reviews")
+                if resenas_el:
+                    match = re.search(r"\((\d+)\)", resenas_el.inner_text())
+                    if match:
+                        numero_resenas = match.group(1)
 
-                if len(lineas) >= 2:
-                    nombre = lineas[1]
+                precio_raw = extraer_precio_tarjeta(tarjeta)
 
-                precio_raw, rating_raw, numero_resenas = extraer_detalle(
-                    browser,
-                    url_detalle
-                )
+                # Se descartan tarjetas sin precio: Hostelworld repite
+                # algunas propiedades en una sección "destacados" aparte
+                # de la lista principal, sin el bloque de precio. La
+                # misma propiedad ya aparece con su precio real en otra
+                # tarjeta de la lista.
+                if precio_raw is None:
+                    continue
+
+                href = tarjeta.get_attribute("href")
+                if href and not href.startswith("http"):
+                    url_detalle = "https://www.hostelworld.com" + href
+                else:
+                    url_detalle = href
 
                 resultados.append({
                     "fuente": "hostelworld",
@@ -118,6 +105,9 @@ def scrape_hostelworld(browser, destino, url):
                     "url_detalle": url_detalle,
                     "fecha_extraccion": datetime.now().isoformat()
                 })
+
+                if nombre:
+                    nombres_vistos.add(nombre)
 
             except Exception:
                 continue
@@ -131,6 +121,7 @@ def scrape_hostelworld(browser, destino, url):
     print(f"Registros encontrados: {len(resultados)}")
 
     return resultados
+
 
 def guardar_raw(datos, destino):
 

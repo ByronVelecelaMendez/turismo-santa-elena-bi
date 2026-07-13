@@ -30,12 +30,13 @@ fig = px.imshow(
     zmin=1, zmax=5,
     text_auto=".2f",
     labels={"color": "Valoración (1-5)"},
-    height=320
+    height=340
 )
 fig.update_layout(
     xaxis_title="Plataforma", yaxis_title="Destino",
     margin=dict(l=10, r=10, t=10, b=10),
 )
+fig = common.estilo_grafico(fig)
 st.plotly_chart(fig, use_container_width=True)
 common.cerrar_seccion()
 
@@ -54,13 +55,14 @@ with col_a:
         color_discrete_sequence=common.PALETA_SECUNDARIA,
         text="valoracion_promedio",
         labels={"valoracion_promedio": "Valoración promedio", "nombre_plataforma": "Plataforma"},
-        height=300
+        height=330
     )
     fig2.update_traces(texttemplate="%{text:.2f}", textposition="outside")
     fig2.update_layout(
         showlegend=False, yaxis_range=[0, 5.5],
         margin=dict(l=10, r=10, t=10, b=10),
     )
+    fig2 = common.estilo_grafico(fig2)
     st.plotly_chart(fig2, use_container_width=True)
     common.cerrar_seccion()
 
@@ -73,9 +75,10 @@ with col_b:
         names="nombre_destino",
         color="nombre_destino",
         color_discrete_map=common.COLORES_DESTINO,
-        height=300
+        height=330
     )
     fig3.update_traces(textposition="inside", textinfo="percent+label")
     fig3.update_layout(margin=dict(l=10, r=10, t=10, b=10))
+    fig3 = common.estilo_grafico(fig3)
     st.plotly_chart(fig3, use_container_width=True)
     common.cerrar_seccion()

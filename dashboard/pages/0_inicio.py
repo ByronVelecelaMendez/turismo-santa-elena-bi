@@ -21,14 +21,14 @@ df_val = common.cargar_valoraciones()
 total_publicaciones = int(df_precios["total_publicaciones"].sum())
 total_resenas = int(df_val["total_resenas"].sum())
 
-st.markdown("<div style='height:24px;'></div>", unsafe_allow_html=True)
+st.markdown("<div style='height:18px;'></div>", unsafe_allow_html=True)
 
-with st.container(border=True, key="caja_kpis"):
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Publicaciones analizadas", f"{total_publicaciones:,}")
-    col2.metric("Destinos cubiertos", "6")
-    col3.metric("Fuentes de datos integradas", "8")
-    col4.metric("Reseñas totales", f"{total_resenas:,}")
+common.render_kpis([
+    {"icono": "home_work", "etiqueta": "Publicaciones analizadas", "valor": f"{total_publicaciones:,}"},
+    {"icono": "map", "etiqueta": "Destinos cubiertos", "valor": "6"},
+    {"icono": "database", "etiqueta": "Fuentes de datos integradas", "valor": "8"},
+    {"icono": "reviews", "etiqueta": "Reseñas totales", "valor": f"{total_resenas:,}"},
+])
 
 st.markdown(
     "<p style='text-align:center; color:#8697A8; font-size:12px; margin-top:12px;'>"

@@ -48,26 +48,30 @@ if hay_comparacion:
 else:
     delta_precio = delta_valoracion = delta_publicaciones = delta_resenas = None
 
-with st.container(border=True, key="caja_kpis"):
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric(
-        "Total publicaciones", f"{total_publicaciones:,}",
-        delta=delta_publicaciones, delta_color="normal",
-    )
-    col2.metric(
-        "Precio promedio/noche", f"${precio_prom_actual:.2f}",
-        delta=delta_precio, delta_color="off",
-    )
-    col3.metric(
-        "Valoración promedio", f"{valoracion_prom_actual:.2f}/5.00",
-        delta=delta_valoracion, delta_color="normal",
-    )
-    col4.metric(
-        "Total reseñas", f"{total_resenas_actual:,}",
-        delta=delta_resenas, delta_color="normal",
-    )
-    if hay_comparacion:
-        st.caption(f"Comparado contra el promedio de los 6 destinos de la provincia.")
+common.render_kpis([
+    {
+        "icono": "home_work", "etiqueta": "Total publicaciones",
+        "valor": f"{total_publicaciones:,}",
+        "delta": delta_publicaciones, "delta_modo": "normal",
+    },
+    {
+        "icono": "payments", "etiqueta": "Precio promedio/noche",
+        "valor": f"${precio_prom_actual:.2f}",
+        "delta": delta_precio, "delta_modo": "off",
+    },
+    {
+        "icono": "star", "etiqueta": "Valoración promedio",
+        "valor": f"{valoracion_prom_actual:.2f}/5.00",
+        "delta": delta_valoracion, "delta_modo": "normal",
+    },
+    {
+        "icono": "reviews", "etiqueta": "Total reseñas",
+        "valor": f"{total_resenas_actual:,}",
+        "delta": delta_resenas, "delta_modo": "normal",
+    },
+])
+if hay_comparacion:
+    st.caption("Comparado contra el promedio de los 6 destinos de la provincia.")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -95,7 +99,8 @@ with col_precio:
         labels={"precio_promedio_noche_usd": "Precio promedio (USD)", "nombre_destino": "Destino"},
     )
     fig.update_traces(texttemplate="$%{text:.2f}", textposition="outside")
-    fig.update_layout(showlegend=False, height=340)
+    fig.update_layout(showlegend=False, height=370)
+    fig = common.estilo_grafico(fig)
     st.plotly_chart(fig, use_container_width=True)
     common.cerrar_seccion()
 
@@ -105,7 +110,7 @@ with col_val:
     # Color con propósito: rojo = por debajo del umbral de satisfacción (4.0),
     # color normal del destino = por encima del umbral.
     colores_val = [
-        "#E74C3C" if v < 4.0 else common.COLORES_DESTINO.get(d, "#3A7CA5")
+        "#E74C3C" if v < 4.0 else common.COLORES_DESTINO.get(d, "#0B3B70")
         for d, v in zip(df_val_orden["nombre_destino"], df_val_orden["valoracion_promedio"])
     ]
     fig2 = px.bar(
@@ -128,54 +133,10 @@ with col_val:
         annotation_font_size=11,
         annotation_font_color="#666666",
     )
-    fig2.update_layout(showlegend=False, height=340, xaxis_range=[0, 5.7])
+    fig2.update_layout(showlegend=False, height=370, xaxis_range=[0, 5.7])
+    fig2 = common.estilo_grafico(fig2)
     st.plotly_chart(fig2, use_container_width=True)
     common.cerrar_seccion()
-
-# ============================================================
-# INSIGHT DESTACADO (storytelling: qué pasa / por qué / qué decisión)
-# Solo aplica con la vista comparativa de los 6 destinos; al filtrar
-# un destino específico no hay comparación posible.
-# ============================================================
-if filtro_destino == "Todos" and not df_val.empty:
-    fila_alerta = df_val.loc[df_val["valoracion_promedio"].idxmin()]
-    if fila_alerta["valoracion_promedio"] < 4.0:
-        destino_alerta = fila_alerta["nombre_destino"]
-        valoracion_alerta = fila_alerta["valoracion_promedio"]
-
-        precio_fila = df_precios[df_precios["nombre_destino"] == destino_alerta]
-        precio_alerta = precio_fila["precio_promedio_noche_usd"].mean() if not precio_fila.empty else None
-        precio_prom_resto = df_precios[
-            df_precios["nombre_destino"] != destino_alerta
-        ]["precio_promedio_noche_usd"].mean()
-        es_caro = precio_alerta is not None and precio_alerta > precio_prom_resto
-
-        texto_precio = (
-            f" y además su precio promedio (${precio_alerta:.2f}/noche) está por encima "
-            f"del resto de destinos (${precio_prom_resto:.2f}/noche)"
-            if es_caro else ""
-        )
-
-        st.markdown(
-            f"""
-            <div style='background:#FDEDEC; border-left:5px solid #E74C3C;
-                        border-radius:8px; padding:14px 20px; margin-bottom:16px;'>
-                <p style='margin:0; font-weight:700; color:#943126; font-size:13px;
-                          letter-spacing:0.3px;'>ALERTA — {destino_alerta} es el destino peor valorado</p>
-                <p style='margin:8px 0 0 0; color:#4A4A4A; font-size:13px; line-height:1.5;'>
-                    <b>Qué pasa:</b> {destino_alerta} tiene una valoración promedio de
-                    {valoracion_alerta:.2f}/5.00, la más baja de los 6 destinos{texto_precio}.<br>
-                    <b>Por qué:</b> esta diferencia suele concentrarse en una plataforma
-                    específica, lo que sugiere que esa fuente indexa publicaciones de
-                    menor calidad para ese destino.<br>
-                    <b>Qué decisión tomar:</b> revisar la oferta de hospedaje en
-                    {destino_alerta} antes de promocionarlo como destino premium, y dar
-                    seguimiento a la calidad percibida por plataforma.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -229,6 +190,7 @@ fig_mapa.update_layout(
         center=dict(lat=lat_centro, lon=lon_centro),
     ),
 )
+fig_mapa = common.estilo_grafico(fig_mapa)
 st.plotly_chart(
     fig_mapa,
     use_container_width=True,
