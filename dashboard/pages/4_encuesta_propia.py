@@ -85,10 +85,11 @@ else:
                 mejoras.columns = ["aspecto", "cantidad"]
                 fig = px.bar(
                     mejoras, x="cantidad", y="aspecto", orientation="h",
-                    color="cantidad", color_continuous_scale="Reds",
+                    color="aspecto", color_discrete_sequence=common.PALETA_SECUNDARIA,
                     labels={"cantidad": "Respuestas", "aspecto": "Aspecto"}, height=370
                 )
-                fig.update_layout(showlegend=False, coloraxis_showscale=False)
+                fig.update_traces(textposition="outside")
+                fig.update_layout(showlegend=False)
                 fig = common.estilo_grafico(fig)
                 st.plotly_chart(fig, use_container_width=True)
             else:
@@ -102,9 +103,26 @@ else:
                 temp.columns = ["temporada", "cantidad"]
                 fig2 = px.pie(
                     temp, values="cantidad", names="temporada", height=370,
+                    hole=0.55,
                     color_discrete_sequence=common.PALETA_SECUNDARIA
                 )
-                fig2.update_traces(textposition="inside", textinfo="percent+label")
+                fig2.update_traces(
+                    textposition="inside",
+                    textinfo="percent",
+                    textfont=dict(size=13, color="#FFFFFF", family="Segoe UI"),
+                    insidetextorientation="horizontal",
+                    marker=dict(line=dict(color="#FFFFFF", width=2)),
+                    hovertemplate="%{label}<br>%{value} respuestas (%{percent})<extra></extra>",
+                )
+                fig2.update_layout(
+                    showlegend=True,
+                    legend=dict(
+                        orientation="v",
+                        yanchor="middle", y=0.5,
+                        xanchor="left", x=1.02,
+                        font=dict(size=11, color="#3A4D63"),
+                    ),
+                )
                 fig2 = common.estilo_grafico(fig2)
                 st.plotly_chart(fig2, use_container_width=True)
             else:
@@ -146,21 +164,20 @@ else:
                     color_discrete_sequence=["#8FA6BC", "#0B3B70"], height=370,
                     labels={"Precio USD/noche": "Precio promedio (USD/noche)"}
                 )
-                fig3.update_traces(texttemplate="$%{text:.2f}", textposition="outside")
-                fig3.update_layout(showlegend=False,
-                                   yaxis_range=[0, max(precio_real_promedio, precio_enc_promedio) * 1.3])
+                fig3.update_traces(
+                    texttemplate="$%{text:.2f}",
+                    textposition="outside",
+                    textfont=dict(size=13, color="#1A2E44"),
+                    width=0.28,
+                )
+                fig3.update_layout(
+                    showlegend=False,
+                    bargap=0.6,
+                    yaxis_range=[0, max(precio_real_promedio, precio_enc_promedio) * 1.3],
+                    xaxis=dict(range=[-0.9, 1.9]),
+                )
                 fig3 = common.estilo_grafico(fig3)
                 st.plotly_chart(fig3, use_container_width=True)
-
-                brecha = precio_real_promedio - precio_enc_promedio
-                pct = (brecha / precio_enc_promedio) * 100 if precio_enc_promedio else 0
-                st.info(
-                    f"**Hallazgo:** Los viajeros encuestados esperan pagar en promedio "
-                    f"**${precio_enc_promedio:.2f}/noche**, mientras que el precio promedio "
-                    f"real en plataformas digitales (calculado en vivo desde el DW) es "
-                    f"**${precio_real_promedio:.2f}/noche** — una brecha de "
-                    f"**${brecha:.2f} ({pct:+.0f}%)**."
-                )
             else:
                 st.info("No se pudo mapear las respuestas de rango de precio de la encuesta.")
         else:
@@ -181,9 +198,26 @@ else:
                 plats.columns = ["plataforma", "cantidad"]
                 fig4 = px.pie(
                     plats, values="cantidad", names="plataforma", height=370,
+                    hole=0.55,
                     color_discrete_sequence=common.PALETA_SECUNDARIA
                 )
-                fig4.update_traces(textposition="inside", textinfo="percent+label")
+                fig4.update_traces(
+                    textposition="inside",
+                    textinfo="percent",
+                    textfont=dict(size=13, color="#FFFFFF", family="Segoe UI"),
+                    insidetextorientation="horizontal",
+                    marker=dict(line=dict(color="#FFFFFF", width=2)),
+                    hovertemplate="%{label}<br>%{value} respuestas (%{percent})<extra></extra>",
+                )
+                fig4.update_layout(
+                    showlegend=True,
+                    legend=dict(
+                        orientation="v",
+                        yanchor="middle", y=0.5,
+                        xanchor="left", x=1.02,
+                        font=dict(size=11, color="#3A4D63"),
+                    ),
+                )
                 fig4 = common.estilo_grafico(fig4)
                 st.plotly_chart(fig4, use_container_width=True)
             else:
