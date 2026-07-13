@@ -4,6 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 import plotly.express as px
+import pydeck as pdk
 import common
 
 filtro_destino, filtro_plataforma = common.render_encabezado_pagina("Análisis de Precios")
@@ -21,151 +22,248 @@ if filtro_plataforma != "Todas":
 if df_fact["precio_noche_usd"].dropna().empty:
     st.info(
         "No hay publicaciones con precio disponibles para esta combinación "
-        "de filtros (Destino / Plataforma). Prueba con otra combinación."
+        "de filtros. Prueba con otra combinación."
     )
 else:
     common.render_kpis([
-        {"icono": "arrow_downward", "etiqueta": "Precio mínimo", "valor": f"${df_fact['precio_noche_usd'].min():.2f}"},
-        {"icono": "payments", "etiqueta": "Precio promedio", "valor": f"${df_fact['precio_noche_usd'].mean():.2f}"},
-        {"icono": "arrow_upward", "etiqueta": "Precio máximo", "valor": f"${df_fact['precio_noche_usd'].max():.2f}"},
+        {
+            "icono": "arrow_downward",
+            "etiqueta": "Precio mínimo",
+            "valor": f"${df_fact['precio_noche_usd'].min():.2f}",
+        },
+        {
+            "icono": "payments",
+            "etiqueta": "Precio promedio",
+            "valor": f"${df_fact['precio_noche_usd'].mean():.2f}",
+        },
+        {
+            "icono": "arrow_upward",
+            "etiqueta": "Precio máximo",
+            "valor": f"${df_fact['precio_noche_usd'].max():.2f}",
+        },
     ])
 
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
 
 # ============================================================
-# FILA 1: Distribución de precios por destino | Mapa
+# FILA 1: Boxplot de precios | Mapa pydeck
 # ============================================================
 col_a, col_b = st.columns(2)
 
 with col_a:
-    common.render_seccion("Distribución de precios por destino")
-    fig = px.box(
-        df_fact.dropna(subset=["precio_noche_usd"]),
-        x="nombre_destino",
-        y="precio_noche_usd",
-        color="nombre_destino",
-        color_discrete_map=common.COLORES_DESTINO,
-        labels={"precio_noche_usd": "Precio/noche (USD)", "nombre_destino": "Destino"},
-        points="outliers"
-    )
-    fig.update_layout(showlegend=False, height=400)
-    fig = common.estilo_grafico(fig)
-    st.plotly_chart(fig, use_container_width=True)
-    common.cerrar_seccion()
+    with common.seccion("Distribución de precios por destino", "box_precios"):
+        fig = px.box(
+            df_fact.dropna(subset=["precio_noche_usd"]),
+            x="nombre_destino",
+            y="precio_noche_usd",
+            color="nombre_destino",
+            color_discrete_map=common.COLORES_DESTINO,
+            labels={
+                "precio_noche_usd": "Precio/noche (USD)",
+                "nombre_destino": "Destino",
+            },
+            points="outliers",
+        )
+        fig.update_layout(showlegend=False, height=380)
+        fig = common.estilo_grafico(fig)
+        st.plotly_chart(fig, width="stretch")
 
 with col_b:
-    common.render_seccion("Mapa de precios por destino")
+    with common.seccion("Mapa de precios por destino", "mapa_precios"):
 
-    # Se reconstruye desde df_fact (ya filtrado por destino Y plataforma)
-    # en vez de usar la vista agregada, para que el mapa SÍ responda al
-    # filtro de Plataforma.
-    df_mapa = (
-        df_fact.dropna(subset=["precio_noche_usd"])
-        .groupby("nombre_destino")
-        .agg(
-            precio_promedio_noche_usd=("precio_noche_usd", "mean"),
-            total_publicaciones=("precio_noche_usd", "count"),
+        df_mapa = (
+            df_fact.dropna(subset=["precio_noche_usd"])
+            .groupby("nombre_destino")
+            .agg(
+                precio_promedio_noche_usd=("precio_noche_usd", "mean"),
+                total_publicaciones=("precio_noche_usd", "count"),
+            )
+            .reset_index()
         )
-        .reset_index()
-    )
-    df_mapa["lat"] = df_mapa["nombre_destino"].map(lambda x: common.COORDENADAS_DESTINO.get(x, (0, 0))[0])
-    df_mapa["lon"] = df_mapa["nombre_destino"].map(lambda x: common.COORDENADAS_DESTINO.get(x, (0, 0))[1])
+        df_mapa["lat"] = df_mapa["nombre_destino"].map(
+            lambda x: common.COORDENADAS_DESTINO.get(x, (0, 0))[0])
+        df_mapa["lon"] = df_mapa["nombre_destino"].map(
+            lambda x: common.COORDENADAS_DESTINO.get(x, (0, 0))[1])
 
-    if df_mapa.empty:
-        st.info("No hay publicaciones con precio para esta combinación de filtros.")
-    else:
-        lat_min, lat_max = df_mapa["lat"].min(), df_mapa["lat"].max()
-        lon_min, lon_max = df_mapa["lon"].min(), df_mapa["lon"].max()
-        lat_centro = (lat_min + lat_max) / 2
-        lon_centro = (lon_min + lon_max) / 2
-        rango_max = max(lat_max - lat_min, lon_max - lon_min, 0.01)
-        if rango_max > 0.35:
-            zoom_mapa = 9.3
-        elif rango_max > 0.15:
-            zoom_mapa = 10.2
+        if df_mapa.empty:
+            st.info("No hay publicaciones con precio para esta combinación de filtros.")
         else:
-            zoom_mapa = 12.5
+            # Conversión hex → RGB
+            _HEX_RGB = {
+                "#0B3B70": [11,  59, 112],
+                "#1B6FC9": [27, 111, 201],
+                "#4A9FD8": [74, 159, 216],
+                "#5B7C99": [91, 124, 153],
+                "#8FA6BC": [143, 166, 188],
+                "#2E8B8B": [46, 139, 139],
+            }
+            df_deck = df_mapa.copy()
+            df_deck["r"] = df_deck["nombre_destino"].map(
+                lambda x: _HEX_RGB.get(common.COLORES_DESTINO.get(x, "#0B3B70"), [11,59,112])[0])
+            df_deck["g"] = df_deck["nombre_destino"].map(
+                lambda x: _HEX_RGB.get(common.COLORES_DESTINO.get(x, "#0B3B70"), [11,59,112])[1])
+            df_deck["b"] = df_deck["nombre_destino"].map(
+                lambda x: _HEX_RGB.get(common.COLORES_DESTINO.get(x, "#0B3B70"), [11,59,112])[2])
+            df_deck["precio_fmt"] = df_deck["precio_promedio_noche_usd"].apply(
+                lambda x: f"{x:.2f}")
 
-        fig_mapa = px.scatter_mapbox(
-            df_mapa,
-            lat="lat", lon="lon",
-            size="total_publicaciones",
-            color="precio_promedio_noche_usd",
-            hover_name="nombre_destino",
-            hover_data={
-                "precio_promedio_noche_usd": ":.2f",
-                "total_publicaciones": True,
-                "lat": False, "lon": False
-            },
-            color_continuous_scale="Blues",
-            size_max=28,
-            mapbox_style="carto-positron",
-            labels={"precio_promedio_noche_usd": "Precio (USD)"},
-        )
-        fig_mapa.update_traces(marker=dict(opacity=0.85))
-        fig_mapa.update_layout(
-            height=380,
-            margin={"r": 0, "t": 0, "l": 0, "b": 0},
-            dragmode=False,
-            coloraxis_colorbar=dict(title="Precio<br>(USD)", thickness=12),
-            mapbox=dict(
-                zoom=zoom_mapa,
-                center=dict(lat=lat_centro, lon=lon_centro),
-            ),
-        )
-        fig_mapa = common.estilo_grafico(fig_mapa)
-        st.plotly_chart(
-            fig_mapa,
-            use_container_width=True,
-            config={"displayModeBar": False, "scrollZoom": False},
-        )
-    st.caption("Color = precio promedio por noche (azul claro: más bajo, azul oscuro: más alto).")
-    common.cerrar_seccion()
+            # Centro fijo en la costa de Santa Elena
+            lat_centro = -2.05
+            lon_centro = -80.86
 
-st.markdown("<br>", unsafe_allow_html=True)
+            capa_circulo = pdk.Layer(
+                "ScatterplotLayer",
+                data=df_deck,
+                get_position=["lon", "lat"],
+                get_radius=400,
+                get_fill_color=["r", "g", "b", 230],
+                get_line_color=[255, 255, 255, 255],
+                line_width_min_pixels=2,
+                pickable=True,
+                auto_highlight=False,
+                stroked=True,
+                radius_min_pixels=8,
+                radius_max_pixels=18,
+            )
+
+            capa_pin = pdk.Layer(
+                "ScatterplotLayer",
+                data=df_deck,
+                get_position=["lon", "lat"],
+                get_radius=120,
+                get_fill_color=[255, 255, 255, 240],
+                pickable=False,
+                stroked=False,
+                radius_min_pixels=3,
+                radius_max_pixels=5,
+            )
+
+            capa_texto = pdk.Layer(
+                "TextLayer",
+                data=df_deck,
+                get_position=["lon", "lat"],
+                get_text="nombre_destino",
+                get_size=12,
+                get_color=[11, 46, 82, 255],
+                get_anchor="'middle'",
+                get_alignment_baseline="'bottom'",
+                get_pixel_offset=[0, -18],
+                font_family="Segoe UI, Arial, sans-serif",
+                font_weight="bold",
+                background=True,
+                get_background_color=[255, 255, 255, 210],
+                get_border_color=[216, 226, 239, 255],
+                border_width=1,
+                get_padding=[3, 2, 3, 2],
+                border_radius=4,
+            )
+
+            tooltip = {
+                "html": """
+                    <div style='
+                        background:#0B3B70;color:#FFFFFF;
+                        padding:10px 14px;border-radius:10px;
+                        font-family:Segoe UI,Arial,sans-serif;
+                        font-size:12px;line-height:1.8;
+                        box-shadow:0 4px 14px rgba(0,0,0,0.25);
+                    '>
+                        <b style='font-size:13px;'>{nombre_destino}</b><br>
+                        💰 USD <b>{precio_fmt}</b> / noche<br>
+                        🏠 <b>{total_publicaciones}</b> publicaciones
+                    </div>
+                """,
+                "style": {"background": "transparent", "border": "none"},
+            }
+
+            vista = pdk.ViewState(
+                latitude=lat_centro,
+                longitude=lon_centro,
+                zoom=9.4,
+                pitch=0,
+                bearing=0,
+            )
+
+            deck = pdk.Deck(
+                layers=[capa_circulo, capa_pin, capa_texto],
+                initial_view_state=vista,
+                map_style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+                tooltip=tooltip,
+            )
+
+            st.pydeck_chart(deck, height=360)
+
+            # Leyenda chips
+            _chips = "".join(
+                f"<span style='display:inline-flex;align-items:center;gap:5px;"
+                f"background:#FFFFFF;border:1px solid #D8E2EF;border-radius:999px;"
+                f"padding:4px 10px;margin:2px 3px;font-size:11px;"
+                f"font-weight:600;color:#1A2E44;'>"
+                f"<span style='width:8px;height:8px;border-radius:50%;"
+                f"background:{color};display:inline-block;'></span>"
+                f"{destino}</span>"
+                for destino, color in common.COLORES_DESTINO.items()
+                if destino in df_deck["nombre_destino"].values
+            )
+            st.markdown(
+                f"<div style='text-align:center;margin-top:6px;'>{_chips}</div>",
+                unsafe_allow_html=True,
+            )
+            st.caption("Hover sobre un punto para ver precio y publicaciones.")
+
+st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
 
 # ============================================================
-# FILA 2: Precio por tipo de alojamiento | Precio por plataforma y destino
+# FILA 2: Precio por tipo de alojamiento | Precio por plataforma
 # ============================================================
 col_c, col_d = st.columns(2)
 
 with col_c:
-    common.render_seccion("Precio por tipo de alojamiento")
-    df_tipo = df_fact.dropna(subset=["precio_noche_usd", "tipo_alojamiento"])
-    if df_tipo.empty:
-        st.info(
-            "No hay datos suficientes de 'tipo_alojamiento' para graficar "
-            "(recuerda: este campo tiene ~73% de nulos documentado en el "
-            "Entregable 3 — Booking y Airbnb no lo exponen)."
-        )
-    else:
-        fig3 = px.box(
-            df_tipo,
-            x="tipo_alojamiento",
-            y="precio_noche_usd",
-            color="tipo_alojamiento",
-            color_discrete_sequence=common.PALETA_SECUNDARIA,
-            labels={"precio_noche_usd": "Precio/noche (USD)", "tipo_alojamiento": "Tipo de alojamiento"},
-            height=400
-        )
-        fig3.update_layout(showlegend=False)
-        fig3 = common.estilo_grafico(fig3)
-        st.plotly_chart(fig3, use_container_width=True)
-    common.cerrar_seccion()
+    with common.seccion("Precio por tipo de alojamiento", "box_tipo"):
+        df_tipo = df_fact.dropna(subset=["precio_noche_usd", "tipo_alojamiento"])
+        if df_tipo.empty:
+            st.info(
+                "No hay datos de 'tipo_alojamiento' para esta combinación "
+                "(Booking y Airbnb no exponen este campo — ~73% de nulos "
+                "documentado en el Entregable 3)."
+            )
+        else:
+            fig3 = px.box(
+                df_tipo,
+                x="tipo_alojamiento",
+                y="precio_noche_usd",
+                color="tipo_alojamiento",
+                color_discrete_sequence=common.PALETA_SECUNDARIA,
+                labels={
+                    "precio_noche_usd": "Precio/noche (USD)",
+                    "tipo_alojamiento": "Tipo de alojamiento",
+                },
+                points="outliers",
+            )
+            fig3.update_layout(showlegend=False, height=380)
+            fig3 = common.estilo_grafico(fig3)
+            st.plotly_chart(fig3, width="stretch")
 
 with col_d:
-    common.render_seccion("Precio promedio por plataforma y destino")
-    df_pivot = df_fact.groupby(["nombre_destino", "nombre_plataforma"])["precio_noche_usd"].mean().reset_index()
-    fig2 = px.bar(
-        df_pivot,
-        x="nombre_destino",
-        y="precio_noche_usd",
-        color="nombre_plataforma",
-        color_discrete_sequence=common.PALETA_SECUNDARIA,
-        barmode="group",
-        labels={"precio_noche_usd": "Precio promedio (USD)", "nombre_destino": "Destino", "nombre_plataforma": "Plataforma"},
-        height=400
-    )
-    fig2 = common.estilo_grafico(fig2)
-    st.plotly_chart(fig2, use_container_width=True)
-    common.cerrar_seccion()
+    with common.seccion("Precio promedio por plataforma y destino", "bar_plataforma"):
+        df_pivot = (
+            df_fact
+            .groupby(["nombre_destino", "nombre_plataforma"])["precio_noche_usd"]
+            .mean()
+            .reset_index()
+        )
+        fig2 = px.bar(
+            df_pivot,
+            x="nombre_destino",
+            y="precio_noche_usd",
+            color="nombre_plataforma",
+            color_discrete_map=common.COLORES_PLATAFORMA,
+            barmode="group",
+            labels={
+                "precio_noche_usd": "Precio promedio (USD)",
+                "nombre_destino": "Destino",
+                "nombre_plataforma": "Plataforma",
+            },
+        )
+        fig2.update_layout(height=380)
+        fig2 = common.estilo_grafico(fig2)
+        st.plotly_chart(fig2, width="stretch")
