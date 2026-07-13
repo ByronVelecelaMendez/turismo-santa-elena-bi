@@ -75,3 +75,7 @@ w3lib==2.4.1
 watchdog==6.0.0
 websockets==16.0
 zope.interface==8.5
+
+plotly==6.9.0
+
+

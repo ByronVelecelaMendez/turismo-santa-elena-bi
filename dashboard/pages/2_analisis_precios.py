@@ -49,15 +49,6 @@ with col_a:
 with col_b:
     common.render_seccion("Mapa de precios por destino")
 
-    COORDENADAS = {
-        "Salinas": (-2.2145, -80.9515),
-        "La Libertad": (-2.2275, -80.9101),
-        "Punta Carnero": (-2.2167, -80.9667),
-        "Montañita": (-1.8333, -80.7667),
-        "Ayangue": (-1.9667, -80.7500),
-        "Manglaralto": (-1.8667, -80.7333),
-    }
-
     # Se reconstruye desde df_fact (ya filtrado por destino Y plataforma)
     # en vez de usar la vista agregada, para que el mapa SÍ responda al
     # filtro de Plataforma.
@@ -70,8 +61,8 @@ with col_b:
         )
         .reset_index()
     )
-    df_mapa["lat"] = df_mapa["nombre_destino"].map(lambda x: COORDENADAS.get(x, (0, 0))[0])
-    df_mapa["lon"] = df_mapa["nombre_destino"].map(lambda x: COORDENADAS.get(x, (0, 0))[1])
+    df_mapa["lat"] = df_mapa["nombre_destino"].map(lambda x: common.COORDENADAS_DESTINO.get(x, (0, 0))[0])
+    df_mapa["lon"] = df_mapa["nombre_destino"].map(lambda x: common.COORDENADAS_DESTINO.get(x, (0, 0))[1])
 
     if df_mapa.empty:
         st.info("No hay publicaciones con precio para esta combinación de filtros.")

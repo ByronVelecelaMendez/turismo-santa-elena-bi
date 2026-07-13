@@ -72,17 +72,9 @@ with st.container(border=True, key="caja_kpis"):
 st.markdown("<br>", unsafe_allow_html=True)
 
 # Datos comunes usados por el mapa y los gráficos
-COORDENADAS = {
-    "Salinas": (-2.2145, -80.9515),
-    "La Libertad": (-2.2275, -80.9101),
-    "Punta Carnero": (-2.2167, -80.9667),
-    "Montañita": (-1.8333, -80.7667),
-    "Ayangue": (-1.9667, -80.7500),
-    "Manglaralto": (-1.8667, -80.7333),
-}
 df_mapa = df_precios.copy()
-df_mapa["lat"] = df_mapa["nombre_destino"].map(lambda x: COORDENADAS.get(x, (0, 0))[0])
-df_mapa["lon"] = df_mapa["nombre_destino"].map(lambda x: COORDENADAS.get(x, (0, 0))[1])
+df_mapa["lat"] = df_mapa["nombre_destino"].map(lambda x: common.COORDENADAS_DESTINO.get(x, (0, 0))[0])
+df_mapa["lon"] = df_mapa["nombre_destino"].map(lambda x: common.COORDENADAS_DESTINO.get(x, (0, 0))[1])
 df_mapa = df_mapa.merge(df_val[["nombre_destino", "valoracion_promedio", "total_resenas"]], on="nombre_destino")
 
 # ============================================================

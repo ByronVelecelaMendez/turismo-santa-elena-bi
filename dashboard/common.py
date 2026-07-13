@@ -28,9 +28,34 @@ COLORES_DESTINO = {
     "Punta Carnero": "#e377c2",
 }
 
+# Coordenadas oficiales de los 6 destinos (única fuente de verdad —
+# antes estaban duplicadas y desincronizadas entre api/config.py,
+# 1_resumen_general.py y 2_analisis_precios.py).
+COORDENADAS_DESTINO = {
+    "Salinas": (-2.2145, -80.9515),
+    "La Libertad": (-2.2275, -80.9101),
+    "Punta Carnero": (-2.2167, -80.9667),
+    "Montañita": (-1.8333, -80.7667),
+    "Ayangue": (-1.9667, -80.7500),
+    "Manglaralto": (-1.8667, -80.7333),
+}
+
 DESTINOS_DISPONIBLES = ["Todos", "Salinas", "Montañita", "Ayangue",
                         "La Libertad", "Manglaralto", "Punta Carnero"]
 PLATAFORMAS_DISPONIBLES = ["Todas", "Booking", "Airbnb", "KAYAK", "Hostelworld"]
+
+# La encuesta (fact_encuesta.destino_homologado) guarda slugs sin tildes
+# generados en etl/procesar_encuesta.py — no el nombre "bonito" que usan
+# las demás tablas del DW. Este mapeo permite filtrar la encuesta por el
+# mismo selector de Destino que usa el resto del dashboard.
+DESTINO_A_SLUG_ENCUESTA = {
+    "Salinas": "salinas",
+    "Montañita": "montanita",
+    "Ayangue": "ayangue",
+    "La Libertad": "la_libertad",
+    "Manglaralto": "manglaralto",
+    "Punta Carnero": "punta_carnero",
+}
 
 # Páginas del dashboard: (título mostrado, ruta relativa al archivo de entrada app.py)
 PAGINAS = [
