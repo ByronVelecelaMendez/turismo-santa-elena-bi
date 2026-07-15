@@ -64,7 +64,7 @@ with col_a:
             },
             points="outliers",
         )
-        fig.update_layout(showlegend=False, height=420)
+        fig.update_layout(showlegend=False, height=400)
         fig = common.estilo_grafico(fig)
         st.plotly_chart(fig, width="stretch")
 
@@ -190,7 +190,7 @@ with col_b:
                 tooltip=tooltip,
             )
 
-            st.pydeck_chart(deck, height=420)
+            st.pydeck_chart(deck, height=340)
 
             # Leyenda chips
             _chips = "".join(
