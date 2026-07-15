@@ -40,16 +40,23 @@ with common.seccion("Valoración promedio por Destino × Plataforma", "heatmap_v
         text_auto=".2f",
         labels={"color": "Valoración (1-5)"},
         height=300,
+        aspect="auto",
     )
     fig.update_traces(
-        textfont=dict(size=14, color="#FFFFFF",
+        textfont=dict(size=16, color="#FFFFFF",
                       family="Segoe UI, Arial, sans-serif"),
     )
     fig.update_layout(
         xaxis_title="Plataforma",
         yaxis_title="Destino",
-        xaxis=dict(side="bottom", tickfont=dict(size=12)),
-        yaxis=dict(tickfont=dict(size=12)),
+        xaxis=dict(
+            side="bottom",
+            tickfont=dict(size=13, color="#1A2E44"),
+            tickangle=0,
+        ),
+        yaxis=dict(
+            tickfont=dict(size=13, color="#1A2E44"),
+        ),
         coloraxis_colorbar=dict(
             title=dict(
                 text="Valoración<br>(1-5)",
@@ -59,7 +66,9 @@ with common.seccion("Valoración promedio por Destino × Plataforma", "heatmap_v
             tickfont=dict(size=10, color="#5A7089"),
             len=0.9,
         ),
+        margin=dict(l=20, r=20, t=20, b=20),
     )
+    
     fig = common.estilo_grafico(fig)
     st.plotly_chart(fig, width="stretch")
     st.caption(
