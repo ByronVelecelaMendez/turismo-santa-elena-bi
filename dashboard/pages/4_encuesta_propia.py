@@ -213,43 +213,28 @@ else:
                 if col_plataforma_enc:
                     plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                     plats.columns = ["plataforma", "cantidad"]
-                    def wrap_label(text, max_len=20):
-                        words = text.split()
-                        lines, current = [], ""
-                        for word in words:
-                            if len(current) + len(word) + 1 <= max_len:
-                                current += (" " if current else "") + word
-                            else:
-                                if current:
-                                    lines.append(current)
-                                current = word
-                        if current:
-                            lines.append(current)
-                        return "<br>".join(lines)
-
-                    plats_sorted = plats.sort_values("cantidad", ascending=True)
-                    plats_sorted = plats_sorted.copy()
-                    plats_sorted["plataforma_wrap"] = plats_sorted["plataforma"].apply(wrap_label)
-
-                    fig4 = px.bar(
-                        plats_sorted,
-                        x="cantidad",
-                        y="plataforma_wrap",
-                        orientation="h",
-                        color="plataforma",
-                        text="cantidad",
+                    fig4 = px.pie(
+                        plats, values="cantidad", names="plataforma",
+                        height=340,
+                        hole=0.50,
                         color_discrete_sequence=common.PALETA_SECUNDARIA,
-                        height=max(340, len(plats_sorted) * 55),
-                        labels={"cantidad": "Respuestas", "plataforma_wrap": "Plataforma"},
                     )
                     fig4.update_traces(
-                        textposition="outside",
-                        textfont=dict(size=12, color="#1A2E44"),
+                        textposition="inside",
+                        textinfo="percent",
+                        textfont=dict(size=12, color="#FFFFFF", family="Segoe UI"),
+                        insidetextorientation="horizontal",
+                        marker=dict(line=dict(color="#FFFFFF", width=2)),
+                        hovertemplate="%{label}<br>%{value} respuestas (%{percent})<extra></extra>",
                     )
                     fig4.update_layout(
-                        showlegend=False,
-                        yaxis=dict(tickfont=dict(size=11)),
-                        xaxis=dict(range=[0, plats_sorted["cantidad"].max() * 1.25]),
+                        showlegend=True,
+                        legend=dict(
+                            orientation="h",
+                            yanchor="bottom", y=-0.35,
+                            xanchor="center", x=0.5,
+                            font=dict(size=10, color="#3A4D63"),
+                        ),
                     )
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
