@@ -413,29 +413,27 @@ def inject_base_css():
     }
 
     /* ============================================================
-       TARJETAS KPI CUSTOM (render_kpi_card)
+       TARJETAS KPI CUSTOM
        ============================================================ */
     .kpi-fila {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 12px;
         background: #FFFFFF;
         border-radius: 18px;
         padding: 16px 18px;
-        border: none;
         box-shadow: 0 8px 24px rgba(11, 59, 112, 0.12), 0 2px 6px rgba(11, 59, 112, 0.06);
         margin-bottom: 4px;
     }
     .kpi-item {
-        flex: 1 1 160px;
-        min-width: 140px;
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 8px 10px;
-    }
-    .kpi-item + .kpi-item {
         border-left: 1px solid #EDF1F6;
+    }
+    .kpi-item:first-child {
+        border-left: none;
     }
     .kpi-icono {
         width: 42px;
@@ -446,10 +444,9 @@ def inject_base_css():
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
     }
-    .kpi-icono svg {
-        display: block;
-    }
+    .kpi-icono svg { display: block; }
     .kpi-texto { min-width: 0; }
     .kpi-etiqueta {
         color: #7A8CA0;
@@ -474,31 +471,7 @@ def inject_base_css():
         font-weight: 700;
         margin-top: 1px;
     }
-    .kpi-delta svg {
-        display: block;
-    }
-    @media (max-width: 640px) {
-        .kpi-fila {
-            flex-direction: column;
-            gap: 8px;
-            padding: 12px 14px;
-        }
-        .kpi-item {
-            flex: 1 1 100%;
-            border-left: none !important;
-            border-top: 1px solid #EDF1F6;
-            padding: 10px 6px;
-        }
-        .kpi-item:first-child {
-            border-top: none;
-        }
-        .kpi-valor {
-            font-size: 20px !important;
-        }
-        .kpi-etiqueta {
-            font-size: 11px !important;
-        }
-    }
+    .kpi-delta svg { display: block; }
 
     /* Encabezado compacto de páginas internas (nav en formato pestaña delgada) */
     .st-key-nav_slim { margin-top: 6px; }
