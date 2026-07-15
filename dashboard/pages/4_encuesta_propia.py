@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import common
 
 filtro_destino, filtro_plataforma = common.render_encabezado_pagina("Encuesta Propia")
@@ -213,32 +214,46 @@ else:
                 if col_plataforma_enc:
                     plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                     plats.columns = ["plataforma", "cantidad"]
-                    total_plats = plats["cantidad"].sum()
-                    plats["porcentaje"] = (plats["cantidad"] / total_plats * 100).round(1)
-                    plats["etiqueta"] = (
-                        plats["plataforma"] + "<br>" +
-                        plats["cantidad"].astype(str) + " (" +
-                        plats["porcentaje"].astype(str) + "%)"
-                    )
+                    plats_sorted = plats.sort_values("cantidad", ascending=True).reset_index(drop=True)
 
-                    fig4 = px.treemap(
-                        plats,
-                        path=[px.Constant(""), "plataforma"],
-                        values="cantidad",
-                        color="plataforma",
-                        color_discrete_sequence=common.PALETA_SECUNDARIA,
-                        custom_data=["cantidad", "porcentaje"],
+                    paleta = common.PALETA_SECUNDARIA
+                    colores_barra = [
+                        paleta[i % len(paleta)] for i in range(len(plats_sorted))
+                    ]
+
+                    fig4 = go.Figure()
+                    for i, row in plats_sorted.iterrows():
+                        fig4.add_trace(go.Scatter(
+                            x=[0, row["cantidad"]],
+                            y=[row["plataforma"], row["plataforma"]],
+                            mode="lines",
+                            line=dict(color=colores_barra[i], width=3),
+                            hoverinfo="skip",
+                            showlegend=False,
+                        ))
+                    fig4.add_trace(go.Scatter(
+                        x=plats_sorted["cantidad"],
+                        y=plats_sorted["plataforma"],
+                        mode="markers+text",
+                        marker=dict(
+                            size=18,
+                            color=colores_barra,
+                            line=dict(color="#FFFFFF", width=2),
+                        ),
+                        text=plats_sorted["cantidad"],
+                        textposition="middle right",
+                        textfont=dict(size=13, color="#1A2E44", family="Segoe UI"),
+                        hovertemplate="%{y}: %{x} respuestas<extra></extra>",
+                        showlegend=False,
+                    ))
+                    fig4.update_layout(
                         height=340,
+                        xaxis=dict(
+                            range=[0, plats_sorted["cantidad"].max() * 1.35],
+                            title="Respuestas",
+                        ),
+                        yaxis=dict(title="Plataforma", tickfont=dict(size=11)),
                     )
-                    fig4.update_traces(
-                        texttemplate="<b>%{label}</b><br>%{customdata[0]} respuestas<br>%{customdata[1]}%",
-                        textfont=dict(size=13, color="#FFFFFF", family="Segoe UI"),
-                        textposition="middle center",
-                        marker=dict(line=dict(color="#FFFFFF", width=2)),
-                        hovertemplate="%{label}<br>%{customdata[0]} respuestas (%{customdata[1]}%)<extra></extra>",
-                        root_color="rgba(0,0,0,0)",
-                    )
-                    fig4.update_layout(margin=dict(l=4, r=4, t=4, b=4))
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
                 else:
