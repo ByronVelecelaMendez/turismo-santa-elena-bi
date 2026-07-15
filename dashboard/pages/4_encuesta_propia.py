@@ -192,9 +192,10 @@ else:
                     plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                     plats.columns = ["plataforma", "cantidad"]
                     fig4 = px.bar(
-                        plats.sort_values("cantidad", ascending=False),
-                        x="plataforma",
-                        y="cantidad",
+                        plats.sort_values("cantidad", ascending=True),
+                        x="cantidad",
+                        y="plataforma",
+                        orientation="h",
                         color="plataforma",
                         text="cantidad",
                         color_discrete_sequence=common.PALETA_SECUNDARIA,
@@ -207,15 +208,8 @@ else:
                     )
                     fig4.update_layout(
                         showlegend=False,
-                        xaxis=dict(
-                            tickangle=0,
-                            tickmode="array",
-                            tickvals=plats["plataforma"].tolist(),
-                            ticktext=[
-                                "<br>".join(label[i:i+15] for i in range(0, len(label), 15))
-                                for label in plats.sort_values("cantidad", ascending=False)["plataforma"].tolist()
-                            ],
-                        ),
+                        yaxis=dict(tickfont=dict(size=11)),
+                        xaxis=dict(range=[0, plats["cantidad"].max() * 1.25]),
                     )
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
