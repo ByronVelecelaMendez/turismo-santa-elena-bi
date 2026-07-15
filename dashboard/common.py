@@ -417,20 +417,22 @@ def inject_base_css():
        ============================================================ */
     .kpi-fila {
         display: flex;
+        flex-wrap: wrap;
         gap: 12px;
         background: #FFFFFF;
         border-radius: 18px;
         padding: 16px 18px;
         border: none;
         box-shadow: 0 8px 24px rgba(11, 59, 112, 0.12), 0 2px 6px rgba(11, 59, 112, 0.06);
-        margin-bottom: 0;
+        margin-bottom: 4px;
     }
     .kpi-item {
-        flex: 1;
+        flex: 1 1 160px;
+        min-width: 140px;
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 0 10px;
+        padding: 8px 10px;
     }
     .kpi-item + .kpi-item {
         border-left: 1px solid #EDF1F6;
@@ -474,6 +476,28 @@ def inject_base_css():
     }
     .kpi-delta svg {
         display: block;
+    }
+    @media (max-width: 640px) {
+        .kpi-fila {
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px 14px;
+        }
+        .kpi-item {
+            flex: 1 1 100%;
+            border-left: none !important;
+            border-top: 1px solid #EDF1F6;
+            padding: 10px 6px;
+        }
+        .kpi-item:first-child {
+            border-top: none;
+        }
+        .kpi-valor {
+            font-size: 20px !important;
+        }
+        .kpi-etiqueta {
+            font-size: 11px !important;
+        }
     }
 
     /* Encabezado compacto de páginas internas (nav en formato pestaña delgada) */
