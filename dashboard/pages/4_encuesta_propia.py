@@ -191,16 +191,34 @@ else:
                 if col_plataforma_enc:
                     plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                     plats.columns = ["plataforma", "cantidad"]
+                    def wrap_label(text, max_len=20):
+                        words = text.split()
+                        lines, current = [], ""
+                        for word in words:
+                            if len(current) + len(word) + 1 <= max_len:
+                                current += (" " if current else "") + word
+                            else:
+                                if current:
+                                    lines.append(current)
+                                current = word
+                        if current:
+                            lines.append(current)
+                        return "<br>".join(lines)
+
+                    plats_sorted = plats.sort_values("cantidad", ascending=True)
+                    plats_sorted = plats_sorted.copy()
+                    plats_sorted["plataforma_wrap"] = plats_sorted["plataforma"].apply(wrap_label)
+
                     fig4 = px.bar(
-                        plats.sort_values("cantidad", ascending=True),
+                        plats_sorted,
                         x="cantidad",
-                        y="plataforma",
+                        y="plataforma_wrap",
                         orientation="h",
                         color="plataforma",
                         text="cantidad",
                         color_discrete_sequence=common.PALETA_SECUNDARIA,
-                        height=340,
-                        labels={"cantidad": "Respuestas", "plataforma": "Plataforma"},
+                        height=max(340, len(plats_sorted) * 55),
+                        labels={"cantidad": "Respuestas", "plataforma_wrap": "Plataforma"},
                     )
                     fig4.update_traces(
                         textposition="outside",
@@ -209,7 +227,7 @@ else:
                     fig4.update_layout(
                         showlegend=False,
                         yaxis=dict(tickfont=dict(size=11)),
-                        xaxis=dict(range=[0, plats["cantidad"].max() * 1.25]),
+                        xaxis=dict(range=[0, plats_sorted["cantidad"].max() * 1.25]),
                     )
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
