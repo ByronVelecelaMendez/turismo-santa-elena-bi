@@ -78,15 +78,37 @@ else:
                 if col_mejora:
                     mejoras = df_enc[col_mejora].value_counts().reset_index()
                     mejoras.columns = ["aspecto", "cantidad"]
+                    def wrap_label(text, max_len=20):
+                        words = text.split()
+                        lines, current = [], ""
+                        for word in words:
+                            if len(current) + len(word) + 1 <= max_len:
+                                current += (" " if current else "") + word
+                            else:
+                                if current:
+                                    lines.append(current)
+                                current = word
+                        if current:
+                            lines.append(current)
+                        return "<br>".join(lines)
+
+                    mejoras_sorted = mejoras.copy()
+                    mejoras_sorted["aspecto_wrap"] = mejoras_sorted["aspecto"].apply(wrap_label)
+
                     fig = px.bar(
-                        mejoras, x="cantidad", y="aspecto", orientation="h",
+                        mejoras_sorted,
+                        x="cantidad", y="aspecto_wrap", orientation="h",
                         color="aspecto",
                         color_discrete_sequence=common.PALETA_SECUNDARIA,
-                        labels={"cantidad": "Respuestas", "aspecto": "Aspecto"},
-                        height=340,
+                        labels={"cantidad": "Respuestas", "aspecto_wrap": "Aspecto"},
+                        height=max(340, len(mejoras_sorted) * 55),
                     )
                     fig.update_traces(textposition="outside")
-                    fig.update_layout(showlegend=False)
+                    fig.update_layout(
+                        showlegend=False,
+                        yaxis=dict(tickfont=dict(size=11)),
+                        xaxis=dict(range=[0, mejoras_sorted["cantidad"].max() * 1.25]),
+                    )
                     fig = common.estilo_grafico(fig)
                     st.plotly_chart(fig, width="stretch")
                 else:
@@ -239,15 +261,33 @@ else:
                 if col_tipo_enc:
                     tipos = df_enc[col_tipo_enc].value_counts().reset_index()
                     tipos.columns = ["tipo", "cantidad"]
+                    tipos_sorted = tipos.sort_values("cantidad", ascending=True).copy()
+                    tipos_sorted["tipo_wrap"] = tipos_sorted["tipo"].apply(
+                        lambda text: "<br>".join(
+                            text[i:i+15] for i in range(0, len(text), 15)
+                        )
+                    )
+
                     fig5 = px.bar(
-                        tipos, x="tipo", y="cantidad", color="tipo",
+                        tipos_sorted,
+                        x="cantidad",
+                        y="tipo_wrap",
+                        orientation="h",
+                        color="tipo",
                         text="cantidad",
                         color_discrete_sequence=common.PALETA_SECUNDARIA,
-                        height=340,
-                        labels={"cantidad": "Respuestas", "tipo": "Tipo de alojamiento"}
+                        height=max(340, len(tipos_sorted) * 55),
+                        labels={"cantidad": "Respuestas", "tipo_wrap": "Tipo de alojamiento"},
                     )
-                    fig5.update_traces(textposition="outside")
-                    fig5.update_layout(showlegend=False)
+                    fig5.update_traces(
+                        textposition="outside",
+                        textfont=dict(size=12, color="#1A2E44"),
+                    )
+                    fig5.update_layout(
+                        showlegend=False,
+                        yaxis=dict(tickfont=dict(size=11)),
+                        xaxis=dict(range=[0, tipos_sorted["cantidad"].max() * 1.25]),
+                    )
                     fig5 = common.estilo_grafico(fig5)
                     st.plotly_chart(fig5, width="stretch")
                 else:
