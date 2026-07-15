@@ -20,10 +20,6 @@ from database.conexion import get_engine
 
 BASE_DIR = Path(__file__).parent
 
-# Paleta profesional por destino — variaciones de azul/gris/teal
-# derivadas del azul institucional (#0B3B70), en vez de colores
-# genéricos tipo Excel. El rojo se reserva exclusivamente para alertas
-# (ver render_seccion / cajas de insight), así no compite visualmente.
 COLORES_DESTINO = {
     "Salinas": "#0B3B70",
     "Montañita": "#1B6FC9",
@@ -33,14 +29,8 @@ COLORES_DESTINO = {
     "Punta Carnero": "#2E8B8B",
 }
 
-# Paleta secundaria para series que NO representan un destino
-# (plataforma, tipo de alojamiento, etc.) — misma familia visual que
-# COLORES_DESTINO, para que todo el dashboard se sienta parte de un
-# solo sistema de diseño en vez de mezclar colores sueltos de Plotly.
 PALETA_SECUNDARIA = ["#0B3B70", "#1B6FC9", "#2E8B8B", "#5B7C99", "#8FA6BC", "#C9A227"]
 
-# Colores fijos por plataforma (los mismos en TODOS los gráficos,
-# para que Airbnb/Booking/KAYAK/Hostelworld se lean igual en cada página)
 COLORES_PLATAFORMA = {
     "Airbnb": "#0B3B70",
     "Booking": "#1B6FC9",
@@ -48,16 +38,10 @@ COLORES_PLATAFORMA = {
     "Hostelworld": "#2E8B8B",
 }
 
-# Escala para valoraciones (semáforo suavizado acorde a la paleta:
-# rojo solo como alerta, verde institucional en el extremo bueno)
 ESCALA_VALORACION = ["#C0392B", "#E8C547", "#1E8E5A"]
 
-# Escala para precios (monocromática de marca: claro = barato)
 ESCALA_PRECIO = ["#DCEAFB", "#0B3B70"]
 
-# Coordenadas oficiales de los 6 destinos (única fuente de verdad —
-# antes estaban duplicadas y desincronizadas entre api/config.py,
-# 1_resumen_general.py y 2_analisis_precios.py).
 COORDENADAS_DESTINO = {
     "Salinas": (-2.2145, -80.9515),
     "La Libertad": (-2.2275, -80.9101),
@@ -71,10 +55,6 @@ DESTINOS_DISPONIBLES = ["Todos", "Salinas", "Montañita", "Ayangue",
                         "La Libertad", "Manglaralto", "Punta Carnero"]
 PLATAFORMAS_DISPONIBLES = ["Todas", "Booking", "Airbnb", "KAYAK", "Hostelworld"]
 
-# La encuesta (fact_encuesta.destino_homologado) guarda slugs sin tildes
-# generados en etl/procesar_encuesta.py — no el nombre "bonito" que usan
-# las demás tablas del DW. Este mapeo permite filtrar la encuesta por el
-# mismo selector de Destino que usa el resto del dashboard.
 DESTINO_A_SLUG_ENCUESTA = {
     "Salinas": "salinas",
     "Montañita": "montanita",
@@ -84,7 +64,6 @@ DESTINO_A_SLUG_ENCUESTA = {
     "Punta Carnero": "punta_carnero",
 }
 
-# Páginas del dashboard: (título mostrado, ruta relativa al archivo de entrada app.py)
 PAGINAS = [
     ("Inicio", "pages/0_inicio.py"),
     ("Resumen General", "pages/1_resumen_general.py"),
@@ -100,8 +79,6 @@ PAGINAS = [
 # ============================================================
 
 def buscar_columna(df: pd.DataFrame, palabra_clave: str):
-    """Busca una columna de la encuesta por palabra clave (sin depender
-    de escribir el texto exacto de cada pregunta, que viene de Google Forms)."""
     for col in df.columns:
         if palabra_clave.lower() in col.lower():
             return col
@@ -109,7 +86,6 @@ def buscar_columna(df: pd.DataFrame, palabra_clave: str):
 
 
 def imagen_segura(ruta, **kwargs):
-    """Carga una imagen sin romper la app si el archivo no existe."""
     try:
         if os.path.exists(str(ruta)):
             st.image(str(ruta), **kwargs)
@@ -163,8 +139,6 @@ def cargar_valoracion_por_plataforma():
 
 @st.cache_data(ttl=300)
 def cargar_encuesta():
-    """Lee la tabla fact_encuesta del DW (cargada con cargar_encuesta_a_dw.py).
-    Cumple con "consumo directo desde el DW, prohibido usar archivos planos"."""
     engine = get_engine()
     try:
         return pd.read_sql("SELECT * FROM fact_encuesta", engine)
@@ -238,10 +212,6 @@ def inject_base_css():
         box-shadow: 0 8px 24px rgba(11, 59, 112, 0.14);
     }
                 
-    /* Oculta la barra superior nativa de Streamlit (Deploy, menu, la
-       franja de color decorativa) y elimina TODO el espacio reservado
-       arriba del contenido. Se usan varios selectores porque Streamlit
-       cambia estos nombres entre versiones. */
     header[data-testid="stHeader"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
     div[data-testid="stToolbar"] { display: none !important; }
@@ -270,7 +240,6 @@ def inject_base_css():
         color: #0B2E52 !important;
         letter-spacing: -0.2px;
     }
-    /* Texto de subtítulo debajo del h1 (st.markdown descriptivo de cada página) */
     div[data-testid="stMarkdownContainer"] > p {
         color: #5A7089;
         font-size: 13.5px;
@@ -355,8 +324,6 @@ def inject_base_css():
         border-right: 1px solid rgba(255, 255, 255, 0.14);
     }
 
-    /* Tarjetas de navegación reales (st.page_link), estilo profesional
-       — se usa en páginas internas que NO son la de Inicio */
     div[data-testid="stPageLink"] { width: 100%; }
     div[data-testid="stPageLink"] a {
         width: 100%;
@@ -476,7 +443,6 @@ def inject_base_css():
     }
     .kpi-delta svg { display: block; }
 
-    /* Encabezado compacto de páginas internas (nav en formato pestaña delgada) */
     .st-key-nav_slim { margin-top: 6px; }
     .st-key-nav_slim div[data-testid="stPageLink"] a {
         min-height: 32px;
@@ -510,9 +476,7 @@ def inject_base_css():
     }
 
     /* ============================================================
-       TARJETAS DE SECCIÓN (contenedor real con key sec_*)
-       El gráfico queda DENTRO de la tarjeta blanca, junto con su
-       barra de título azul.
+       TARJETAS DE SECCIÓN
        ============================================================ */
     div[class*="st-key-sec_"] {
         background: #FFFFFF;
@@ -534,6 +498,49 @@ def inject_base_css():
         font-size: 12.5px;
         letter-spacing: 0.5px;
         text-transform: uppercase;
+    }
+
+    /* ============================================================
+       RESPONSIVE — CELULAR / PANTALLAS ANGOSTAS
+       st.columns(2) no se apila de forma fiable en navegadores
+       móviles; se fuerza aquí para que cada tarjeta/gráfica ocupe
+       el 100% del ancho y quede una debajo de otra, sin cortarse.
+       ============================================================ */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-left: 0.9rem !important;
+            padding-right: 0.9rem !important;
+        }
+        div[data-testid="stHorizontalBlock"] {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+        div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+            min-width: 100% !important;
+        }
+        .kpi-fila {
+            grid-template-columns: 1fr;
+        }
+        .kpi-item {
+            border-left: none;
+            border-top: 1px solid #EDF1F6;
+        }
+        .kpi-item:first-child {
+            border-top: none;
+        }
+        .st-key-nav_cards div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"]:not(:last-child) {
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+        }
+        .js-plotly-plot, .plot-container {
+            width: 100% !important;
+        }
+        .barra-seccion {
+            font-size: 11.5px;
+            padding: 8px 12px;
+        }
     }
     </style>
     """, unsafe_allow_html=True)
@@ -738,9 +745,6 @@ def render_encabezado_compacto(pagina_activa: str = ""):
 # TARJETAS KPI (icono + valor grande + etiqueta + delta opcional)
 # ============================================================
 
-# Iconos SVG inline (no dependen de fuentes externas ni de que Streamlit
-# permita cargar recursos de terceros — por eso se reemplazó el intento
-# anterior con Material Symbols vía Google Fonts, que Streamlit bloquea).
 _ICONOS_SVG = {
     "bar_chart": '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="{c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/></svg>',
     "payments": '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="{c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>',
@@ -758,24 +762,11 @@ _ICONOS_SVG = {
 
 
 def _icono_svg(nombre: str, color: str = "#FFFFFF", size: int = 21) -> str:
-    """Devuelve el markup SVG de un icono, ya coloreado y dimensionado.
-    Si el nombre no existe en el set, usa un icono genérico de respaldo."""
     plantilla = _ICONOS_SVG.get(nombre, _ICONOS_SVG["bar_chart"])
     return plantilla.format(s=size, c=color)
 
 
 def render_kpis(items):
-    """Dibuja una fila de tarjetas KPI custom (icono + valor + etiqueta
-    + delta opcional), todas dentro de una sola tarjeta contenedora.
-
-    items: lista de dicts con:
-      icono (str)  -> nombre de Material Symbol, ej. "bar_chart"
-      etiqueta (str)
-      valor (str)  -> ya formateado, ej. "$108.14"
-      delta (str, opcional) -> ya formateado con signo, ej. "+3.20 vs. promedio"
-      delta_modo (str, opcional) -> "normal" (verde/rojo según signo) o
-                                     "off" (gris, sin connotación buena/mala)
-    """
     html_items = []
     for it in items:
         delta = it.get("delta")
@@ -793,10 +784,6 @@ def render_kpis(items):
                 f"<div class='kpi-delta' style='color:{color_delta};'>"
                 f"{_icono_svg(icono_delta, color=color_delta, size=13)}{delta}</div>"
             )
-        # HTML de cada tarjeta construido en una sola línea continua (sin
-        # saltos de línea internos): si delta_html quedara vacío, una
-        # línea en blanco en medio del bloque hace que el HTML se corte
-        # y el resto se muestre como texto plano en vez de renderizarse.
         item_html = (
             "<div class='kpi-item'>"
             f"<div class='kpi-icono'>{_icono_svg(it['icono'], color='#FFFFFF', size=21)}</div>"
@@ -820,13 +807,6 @@ def render_kpis(items):
 # ============================================================
 
 def estilo_grafico(fig):
-    """Aplica estilo visual consistente (tipografía, fondo transparente,
-    cuadrícula suave, tooltips en la paleta de marca) a cualquier figura
-    de Plotly del dashboard. Llamar justo antes de st.plotly_chart().
-
-    Nota: title_text="" elimina el título interno de Plotly (que salía
-    como "undefined" cuando no estaba definido) — el título de cada
-    gráfico lo lleva la barra azul de su tarjeta de sección."""
     fig.update_layout(
         title_text="",
         margin=dict(l=10, r=10, t=30, b=10),
@@ -866,18 +846,6 @@ def estilo_grafico(fig):
 
 @contextmanager
 def seccion(titulo: str, key: str):
-    """Tarjeta de sección real: barra de título azul + contenido DENTRO
-    de la misma tarjeta blanca. Reemplaza a render_seccion/cerrar_seccion,
-    que no funcionaban porque Streamlit auto-cierra el HTML de cada
-    st.markdown y el gráfico quedaba fuera del div (por eso se veían
-    cajas blancas vacías bajo cada barra de título).
-
-    Uso:
-        with common.seccion("PRECIO PROMEDIO POR DESTINO", "precio_destino"):
-            st.plotly_chart(fig, width="stretch")
-
-    key debe ser único dentro de cada página (sin espacios ni tildes).
-    """
     with st.container(key=f"sec_{key}"):
         st.markdown(f'<div class="barra-seccion">{titulo}</div>',
                     unsafe_allow_html=True)
@@ -885,21 +853,16 @@ def seccion(titulo: str, key: str):
 
 
 def render_seccion(titulo: str):
-    """OBSOLETA — usar `with common.seccion(titulo, key):` en su lugar.
-    Se mantiene para que las páginas no migradas no se rompan mientras
-    tanto: dibuja solo la cinta de título (sin caja rota debajo)."""
     st.markdown(f'<div class="barra-seccion" style="border-radius:10px;">{titulo}</div>',
                 unsafe_allow_html=True)
 
 
 def cerrar_seccion():
-    """OBSOLETA — ya no hace nada. Usar `with common.seccion(...)`."""
     pass
 
 
 # ============================================================
 # BARRA DE FILTROS COMPACTA — una sola fila
-# (comparte estado entre páginas vía session_state)
 # ============================================================
 
 def render_filtros():
@@ -935,7 +898,6 @@ def render_filtros():
 
 
 def render_filtros_solo_destino():
-    """Igual que render_filtros(), pero sin el selectbox de Plataforma."""
     with st.container(key="caja_filtros"):
         col_lbl, col_f1, col_info = st.columns([0.62, 1.05, 4.65])
         with col_lbl:
@@ -963,22 +925,17 @@ def render_filtros_solo_destino():
 
 
 def render_encabezado_pagina(pagina_activa: str = ""):
-    """Llamar al inicio de cada página de CONTENIDO (no Inicio): CSS +
-    encabezado compacto + filtros. Devuelve (filtro_destino, filtro_plataforma)."""
     inject_base_css()
     render_encabezado_compacto(pagina_activa)
     return render_filtros()
 
 
 def render_encabezado_sin_filtros(pagina_activa: str = ""):
-    """Igual que render_encabezado_pagina, pero SIN la barra de filtros."""
     inject_base_css()
     render_encabezado_compacto(pagina_activa)
 
 
 def render_encabezado_pagina_solo_destino(pagina_activa: str = ""):
-    """Igual que render_encabezado_pagina, pero con SOLO el filtro de
-    Destino. Devuelve filtro_destino."""
     inject_base_css()
     render_encabezado_compacto(pagina_activa)
     return render_filtros_solo_destino()
