@@ -207,7 +207,15 @@ else:
                     )
                     fig4.update_layout(
                         showlegend=False,
-                        xaxis=dict(tickangle=-30),
+                        xaxis=dict(
+                            tickangle=0,
+                            tickmode="array",
+                            tickvals=plats["plataforma"].tolist(),
+                            ticktext=[
+                                "<br>".join(label[i:i+15] for i in range(0, len(label), 15))
+                                for label in plats.sort_values("cantidad", ascending=False)["plataforma"].tolist()
+                            ],
+                        ),
                     )
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
