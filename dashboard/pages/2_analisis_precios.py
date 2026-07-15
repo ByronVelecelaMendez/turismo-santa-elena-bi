@@ -190,7 +190,7 @@ with col_b:
                 tooltip=tooltip,
             )
 
-            st.pydeck_chart(deck, height=330)
+            st.pydeck_chart(deck, height=340)
 
             # Leyenda chips
             _chips = "".join(
