@@ -191,27 +191,22 @@ else:
                 if col_plataforma_enc:
                     plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                     plats.columns = ["plataforma", "cantidad"]
-                    fig4 = px.pie(
-                        plats, values="cantidad", names="plataforma",
-                        height=340,
-                        hole=0.50,
+                    fig4 = px.bar(
+                        plats,
+                        x="cantidad",
+                        y="plataforma",
+                        orientation="h",
+                        color="plataforma",
+                        text="cantidad",
                         color_discrete_sequence=common.PALETA_SECUNDARIA,
+                        height=340,
+                        labels={"cantidad": "Respuestas", "plataforma": "Plataforma"},
                     )
                     fig4.update_traces(
-                        textposition="none",
-                        textinfo="none",
-                        marker=dict(line=dict(color="#FFFFFF", width=2)),
-                        hovertemplate="%{label}<br>%{value} respuestas (%{percent})<extra></extra>",
+                        textposition="outside",
+                        textfont=dict(size=11, color="#1A2E44"),
                     )
-                    fig4.update_layout(
-                        showlegend=True,
-                        legend=dict(
-                            orientation="v",
-                            yanchor="middle", y=0.5,
-                            xanchor="left", x=1.02,
-                            font=dict(size=10, color="#3A4D63"),
-                        ),
-                    )
+                    fig4.update_layout(showlegend=False)
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
                 else:
