@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from database.conexion import get_engine
@@ -166,7 +167,40 @@ def cargar_fact_hospedaje():
 # ESTILOS BASE (se inyectan en cada página)
 # ============================================================
 
+def forzar_viewport_movil():
+    """Corrige el <meta name="viewport"> del documento padre.
+    Algunos navegadores móviles (sobre todo en apps desplegadas en
+    Streamlit Cloud) no respetan el viewport por defecto y renderizan
+    la página como si fuera de escritorio (~980px), mostrándola
+    encogida con texto diminuto y contenido cortado a los lados.
+    Este script se inyecta una vez por página y fuerza
+    width=device-width para que el celular use su ancho real."""
+    components.html(
+        """
+        <script>
+        (function() {
+            try {
+                var doc = window.parent.document;
+                var existing = doc.querySelector('meta[name="viewport"]');
+                var content = 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover';
+                if (existing) {
+                    existing.setAttribute('content', content);
+                } else {
+                    var meta = doc.createElement('meta');
+                    meta.name = 'viewport';
+                    meta.content = content;
+                    doc.head.appendChild(meta);
+                }
+            } catch (e) {}
+        })();
+        </script>
+        """,
+        height=0,
+    )
+
+
 def inject_base_css():
+    forzar_viewport_movil()
     st.markdown("""
     <style>
     html, body, .stApp {
