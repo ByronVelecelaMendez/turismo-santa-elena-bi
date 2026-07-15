@@ -198,19 +198,17 @@ else:
                         color_discrete_sequence=common.PALETA_SECUNDARIA,
                     )
                     fig4.update_traces(
-                        textposition="inside",
-                        textinfo="percent",
-                        textfont=dict(size=12, color="#FFFFFF", family="Segoe UI"),
-                        insidetextorientation="horizontal",
+                        textposition="none",
+                        textinfo="none",
                         marker=dict(line=dict(color="#FFFFFF", width=2)),
                         hovertemplate="%{label}<br>%{value} respuestas (%{percent})<extra></extra>",
                     )
                     fig4.update_layout(
                         showlegend=True,
                         legend=dict(
-                            orientation="h",
-                            yanchor="bottom", y=-0.35,
-                            xanchor="center", x=0.5,
+                            orientation="v",
+                            yanchor="middle", y=0.5,
+                            xanchor="left", x=1.02,
                             font=dict(size=10, color="#3A4D63"),
                         ),
                     )
