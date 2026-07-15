@@ -454,14 +454,17 @@ def inject_base_css():
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.4px;
-        white-space: nowrap;
+        white-space: normal;
+        line-height: 1.3;
+        word-break: break-word;
     }
     .kpi-valor {
         color: #16233A;
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 800;
         line-height: 1.3;
-        white-space: nowrap;
+        white-space: normal;
+        word-break: break-word;
     }
     .kpi-delta {
         display: flex;
