@@ -213,29 +213,32 @@ else:
                 if col_plataforma_enc:
                     plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                     plats.columns = ["plataforma", "cantidad"]
-                    fig4 = px.pie(
-                        plats, values="cantidad", names="plataforma",
-                        height=340,
-                        hole=0.50,
+                    total_plats = plats["cantidad"].sum()
+                    plats["porcentaje"] = (plats["cantidad"] / total_plats * 100).round(1)
+                    plats["etiqueta"] = (
+                        plats["plataforma"] + "<br>" +
+                        plats["cantidad"].astype(str) + " (" +
+                        plats["porcentaje"].astype(str) + "%)"
+                    )
+
+                    fig4 = px.treemap(
+                        plats,
+                        path=[px.Constant(""), "plataforma"],
+                        values="cantidad",
+                        color="plataforma",
                         color_discrete_sequence=common.PALETA_SECUNDARIA,
+                        custom_data=["cantidad", "porcentaje"],
+                        height=340,
                     )
                     fig4.update_traces(
-                        textposition="inside",
-                        textinfo="percent",
-                        textfont=dict(size=12, color="#FFFFFF", family="Segoe UI"),
-                        insidetextorientation="horizontal",
+                        texttemplate="<b>%{label}</b><br>%{customdata[0]} respuestas<br>%{customdata[1]}%",
+                        textfont=dict(size=13, color="#FFFFFF", family="Segoe UI"),
+                        textposition="middle center",
                         marker=dict(line=dict(color="#FFFFFF", width=2)),
-                        hovertemplate="%{label}<br>%{value} respuestas (%{percent})<extra></extra>",
+                        hovertemplate="%{label}<br>%{customdata[0]} respuestas (%{customdata[1]}%)<extra></extra>",
+                        root_color="rgba(0,0,0,0)",
                     )
-                    fig4.update_layout(
-                        showlegend=True,
-                        legend=dict(
-                            orientation="h",
-                            yanchor="bottom", y=-0.35,
-                            xanchor="center", x=0.5,
-                            font=dict(size=10, color="#3A4D63"),
-                        ),
-                    )
+                    fig4.update_layout(margin=dict(l=4, r=4, t=4, b=4))
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
                 else:
