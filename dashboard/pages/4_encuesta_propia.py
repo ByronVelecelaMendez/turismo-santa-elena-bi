@@ -5,7 +5,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import common
 
 filtro_destino, filtro_plataforma = common.render_encabezado_pagina("Encuesta Propia")
@@ -214,45 +213,44 @@ else:
                 if col_plataforma_enc:
                     plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                     plats.columns = ["plataforma", "cantidad"]
-                    plats_sorted = plats.sort_values("cantidad", ascending=True).reset_index(drop=True)
+                    plats_sorted = plats.sort_values("cantidad", ascending=True).copy()
+                    plats_sorted["plataforma_wrap"] = plats_sorted["plataforma"].apply(
+                        lambda text: "<br>".join(
+                            text[i:i+15] for i in range(0, len(text), 15)
+                        )
+                    )
 
-                    paleta = common.PALETA_SECUNDARIA
-                    colores_barra = [
-                        paleta[i % len(paleta)] for i in range(len(plats_sorted))
-                    ]
+                    # Color explícito por plataforma tomado de la paleta
+                    # institucional (en el orden en que aparecen, ya
+                    # ordenadas de menor a mayor), en vez de dejar que
+                    # Plotly asigne colores automáticamente — así se
+                    # garantiza que siempre sean los tonos de marca.
+                    plataformas_unicas = plats_sorted["plataforma"].tolist()
+                    mapa_color = {
+                        p: common.PALETA_SECUNDARIA[i % len(common.PALETA_SECUNDARIA)]
+                        for i, p in enumerate(plataformas_unicas)
+                    }
 
-                    fig4 = go.Figure()
-                    for i, row in plats_sorted.iterrows():
-                        fig4.add_trace(go.Scatter(
-                            x=[0, row["cantidad"]],
-                            y=[row["plataforma"], row["plataforma"]],
-                            mode="lines",
-                            line=dict(color=colores_barra[i], width=3),
-                            hoverinfo="skip",
-                            showlegend=False,
-                        ))
-                    fig4.add_trace(go.Scatter(
-                        x=plats_sorted["cantidad"],
-                        y=plats_sorted["plataforma"],
-                        mode="markers+text",
-                        marker=dict(
-                            size=18,
-                            color=colores_barra,
-                            line=dict(color="#FFFFFF", width=2),
-                        ),
-                        text=plats_sorted["cantidad"],
-                        textposition="middle right",
-                        textfont=dict(size=13, color="#1A2E44", family="Segoe UI"),
-                        hovertemplate="%{y}: %{x} respuestas<extra></extra>",
-                        showlegend=False,
-                    ))
+                    fig4 = px.bar(
+                        plats_sorted,
+                        x="cantidad",
+                        y="plataforma_wrap",
+                        orientation="h",
+                        color="plataforma",
+                        color_discrete_map=mapa_color,
+                        text="cantidad",
+                        height=max(340, len(plats_sorted) * 55),
+                        labels={"cantidad": "Respuestas", "plataforma_wrap": "Plataforma"},
+                    )
+                    fig4.update_traces(
+                        textposition="outside",
+                        textfont=dict(size=12, color="#1A2E44"),
+                        marker=dict(line=dict(color="#FFFFFF", width=1)),
+                    )
                     fig4.update_layout(
-                        height=340,
-                        xaxis=dict(
-                            range=[0, plats_sorted["cantidad"].max() * 1.35],
-                            title="Respuestas",
-                        ),
-                        yaxis=dict(title="Plataforma", tickfont=dict(size=11)),
+                        showlegend=False,
+                        yaxis=dict(tickfont=dict(size=11)),
+                        xaxis=dict(range=[0, plats_sorted["cantidad"].max() * 1.25]),
                     )
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
