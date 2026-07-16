@@ -213,45 +213,37 @@ else:
                 if col_plataforma_enc:
                     plats = df_enc[col_plataforma_enc].value_counts().reset_index()
                     plats.columns = ["plataforma", "cantidad"]
-                    plats_sorted = plats.sort_values("cantidad", ascending=True).copy()
-                    plats_sorted["plataforma_wrap"] = plats_sorted["plataforma"].apply(
-                        lambda text: "<br>".join(
-                            text[i:i+15] for i in range(0, len(text), 15)
-                        )
-                    )
+                    total_plats = plats["cantidad"].sum()
+                    plats["porcentaje"] = (plats["cantidad"] / total_plats * 100).round(1)
+                    plats_sorted = plats.sort_values("cantidad", ascending=False).reset_index(drop=True)
 
                     # Color explícito por plataforma tomado de la paleta
-                    # institucional (en el orden en que aparecen, ya
-                    # ordenadas de menor a mayor), en vez de dejar que
-                    # Plotly asigne colores automáticamente — así se
-                    # garantiza que siempre sean los tonos de marca.
-                    plataformas_unicas = plats_sorted["plataforma"].tolist()
+                    # institucional (en orden de mayor a menor), en vez
+                    # de dejar que Plotly asigne colores automáticamente
+                    # — así se garantiza que siempre sean los tonos de marca.
                     mapa_color = {
-                        p: common.PALETA_SECUNDARIA[i % len(common.PALETA_SECUNDARIA)]
-                        for i, p in enumerate(plataformas_unicas)
+                        row["plataforma"]: common.PALETA_SECUNDARIA[i % len(common.PALETA_SECUNDARIA)]
+                        for i, row in plats_sorted.iterrows()
                     }
 
-                    fig4 = px.bar(
+                    fig4 = px.treemap(
                         plats_sorted,
-                        x="cantidad",
-                        y="plataforma_wrap",
-                        orientation="h",
+                        path=[px.Constant(""), "plataforma"],
+                        values="cantidad",
                         color="plataforma",
                         color_discrete_map=mapa_color,
-                        text="cantidad",
-                        height=max(340, len(plats_sorted) * 55),
-                        labels={"cantidad": "Respuestas", "plataforma_wrap": "Plataforma"},
+                        custom_data=["cantidad", "porcentaje"],
+                        height=340,
                     )
                     fig4.update_traces(
-                        textposition="outside",
-                        textfont=dict(size=12, color="#1A2E44"),
-                        marker=dict(line=dict(color="#FFFFFF", width=1)),
+                        texttemplate="<b>%{label}</b><br>%{customdata[0]} respuestas<br>%{customdata[1]}%",
+                        textfont=dict(size=13, color="#FFFFFF", family="Segoe UI"),
+                        textposition="middle center",
+                        marker=dict(line=dict(color="#FFFFFF", width=2)),
+                        hovertemplate="%{label}<br>%{customdata[0]} respuestas (%{customdata[1]}%)<extra></extra>",
+                        root_color="rgba(0,0,0,0)",
                     )
-                    fig4.update_layout(
-                        showlegend=False,
-                        yaxis=dict(tickfont=dict(size=11)),
-                        xaxis=dict(range=[0, plats_sorted["cantidad"].max() * 1.25]),
-                    )
+                    fig4.update_layout(margin=dict(l=4, r=4, t=4, b=4))
                     fig4 = common.estilo_grafico(fig4)
                     st.plotly_chart(fig4, width="stretch")
                 else:
